@@ -5,7 +5,7 @@ class RandomWordSpout : Storm Spout {
 
   def run {
     loop: {
-      emit: $ @words at_random
+      emit: $ [@words random]
     }
   }
 }
@@ -19,7 +19,7 @@ class LalalaBolt : Storm Bolt {
   }
 }
 
-t = Topology new: "lalala" with: {
+lalala = Topology new: "lalala" with: {
   spouts: {
     id: 1 is: $ RandomWordSpout new: ["chris", "mike", "nathan"] . do: {
       parallelism: 10
@@ -32,3 +32,5 @@ t = Topology new: "lalala" with: {
     }
   }
 }
+
+Storm submit_topology: lalala
