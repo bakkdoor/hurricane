@@ -21,7 +21,7 @@ class Storm {
       }
     }
 
-    class SpoutDef {
+    class SpoutDef : ComponentDef {
       def initialize: topology with: block {
         initialize: topology
         @spout = block call_with_receiver: self

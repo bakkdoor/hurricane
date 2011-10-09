@@ -1,3 +1,5 @@
+require: "stormi.fy"
+
 class RandomWordSpout : Storm Spout {
   output_fields: ["name"]
 
@@ -18,7 +20,7 @@ class LalalaBolt : Storm Bolt {
   }
 }
 
-lalala = Topology new: "lalala" with: {
+lalala = Storm Topology new: "lalala" with: {
   spout: {
     id: 1
     parallelism: 10
