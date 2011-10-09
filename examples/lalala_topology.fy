@@ -5,31 +5,31 @@ class RandomWordSpout : Storm Spout {
 
   def run {
     loop: {
-      emit: $ [@words random]
+      emit: [@words random]
     }
   }
 }
 
 class LalalaBolt : Storm Bolt {
-  groups_on_fields: ["name"]
   output_fields: ["lalala_name"]
 
   def process: tuple {
-    emit: $ [tuple values first  + "lalala"]
+    emit: [tuple[0] + "lalala"]
   }
 }
 
 lalala = Topology new: "lalala" with: {
-  spouts: {
-    id: 1 is: $ RandomWordSpout new: ["chris", "mike", "nathan"] . do: {
-      parallelism: 10
-    }
+  spout: {
+    id: 1
+    parallelism: 10
+    RandomWordSpout new: ["chris", "mike", "nathan"]
   }
 
-  bolts: {
-    id: 2 is: $ LalalaBolt new do: {
-      parallelism: 3
-    }
+  bolt: {
+    id: 2
+    parallelism: 3
+    groups_on_fields: ["name"] from: 1
+    LalalaBolt new
   }
 }
 

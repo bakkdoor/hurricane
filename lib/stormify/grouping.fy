@@ -4,8 +4,8 @@ class Storm {
       NoneGrouping new
     }
 
-    def Grouping fields: fields {
-      FieldsGrouping new: fields
+    def Grouping fields: fields from: id {
+      FieldsGrouping new: fields from: id
     }
   }
 
@@ -14,6 +14,6 @@ class Storm {
 
   class FieldsGrouping : Grouping {
     read_slot: 'fields
-    def initialize: @fields
+    def initialize: @fields from: @id
   }
 }
