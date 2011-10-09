@@ -2,9 +2,7 @@ require: "stormi.fy"
 
 class RandomWordSpout : Storm Spout {
   output_fields: ["name"]
-
   def initialize: @words
-
   def run {
     loop: {
       emit: [@words random]
@@ -14,7 +12,6 @@ class RandomWordSpout : Storm Spout {
 
 class LalalaBolt : Storm Bolt {
   output_fields: ["lalala_name"]
-
   def process: tuple {
     emit: [tuple[0] + "lalala"]
   }
