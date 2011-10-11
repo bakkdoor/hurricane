@@ -20,6 +20,11 @@ class Storm {
         { id = id id } if: (id is_a?: ComponentDef)
         @grouping = Grouping fields: fields from: id
       }
+
+      def subscribe_to: stream grouped_on: fields from: bolt {
+        { @grouping = MultiGrouping new } unless: (@grouping is_a?: MultiGrouping)
+        @grouping add: stream fields: fields bolt: bolt
+      }
     }
 
     class SpoutDef : ComponentDef {

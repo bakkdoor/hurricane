@@ -16,4 +16,14 @@ class Storm {
     read_slot: 'fields
     def initialize: @fields from: @id
   }
+
+  class MultiGrouping {
+    def initialize {
+      @groupings = <[]>
+    }
+
+    def add: stream fields: fields bolt: bolt {
+      @groupings[bolt]: (stream, fields)
+    }
+  }
 }
