@@ -24,7 +24,7 @@ lalala = Storm Topology new: "lalala" with: {
     RandomWordSpout new: ["chris", "mike", "nathan"]
   }
 
-  lalala = bolt: {
+  bolt: {
     id: 2
     parallelism: 3
     groups_on_fields: ["name"] from: random_names # alternatively just use 1 (the spout's id) here.
