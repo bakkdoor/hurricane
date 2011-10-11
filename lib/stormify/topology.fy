@@ -17,6 +17,7 @@ class Storm {
       }
 
       def groups_on_fields: fields from: id {
+        { id = id id } if: (id is_a?: ComponentDef)
         @grouping = Grouping fields: fields from: id
       }
     }
