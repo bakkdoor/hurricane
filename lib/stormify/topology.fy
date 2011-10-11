@@ -37,11 +37,13 @@ class Storm {
     def bolt: block {
       b = BoltDef new: self with: block
       @bolts << b
+      b
     }
 
     def spout: block {
       s = SpoutDef new: self with: block
       @spouts << s
+      s
     }
   }
 }
