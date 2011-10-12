@@ -33,5 +33,21 @@ class Storm {
     def Component parallelism: p {
       @@parallelism = p
     }
+
+    def Component output_streams {
+      @@output_streams
+    }
+
+    def Component output_fields {
+      @@output_fields
+    }
+
+    def output_streams {
+      @@output_streams
+    }
+
+    def output_fields {
+      @@output_fields
+    }
   }
 }

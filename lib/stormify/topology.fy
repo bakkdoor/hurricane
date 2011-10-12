@@ -14,7 +14,7 @@ class Storm {
     }
 
     class BoltDef : ComponentDef {
-      read_write_slot: 'grouping
+      read_write_slots: ('bolt, 'grouping)
       def initialize: topology with: block {
         initialize: topology
         @grouping = Grouping none
@@ -33,6 +33,7 @@ class Storm {
     }
 
     class SpoutDef : ComponentDef {
+      read_slot: 'spout
       def initialize: topology with: block {
         initialize: topology
         @spout = block call_with_receiver: self

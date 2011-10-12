@@ -81,6 +81,8 @@ FancySpec describe: Storm Topology with: {
     t s2 parallelism is: 5
     t s3 parallelism is: 1
 
+    t s3 spout output_streams size is: 2
+
     t b1 parallelism is: 2
     t b2 parallelism is: 10
   }
