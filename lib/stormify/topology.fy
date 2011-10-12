@@ -39,6 +39,8 @@ class Storm {
       }
     }
 
+    read_slots: ('bolts, 'spouts, 'name)
+
     def initialize: @name with: block {
       @bolts = []
       @spouts = []
@@ -55,6 +57,19 @@ class Storm {
       s = SpoutDef new: self with: block
       @spouts << s
       s
+    }
+
+    # handle dynamic slot accessor messages
+    def unknown_message: m with_params: p {
+      if: (p empty?) then: {
+        if: (m to_s =~ /^:/) then: {
+          slotname = m to_s rest
+          if: (get_slot: slotname) then: |slot| {
+            return slot
+          }
+        }
+      }
+      super receive_message: m with_params: p
     }
   }
 }

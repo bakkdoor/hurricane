@@ -14,11 +14,11 @@ class LalalaBolt : Storm Bolt {
   output_fields: ["lalala_name"]
 
   output_streams: {
-    url = stream: {
+    @url = stream: {
       fields: ["foo", "bar"]
       direct: true  # optional, defaults to false
     }
-    foo = stream: {
+    @foo = stream: {
       fields: ["bar", "baz"]
       direct: false # optional, defaults to false
     }
