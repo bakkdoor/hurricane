@@ -38,7 +38,7 @@ lalala = Storm Topology new: "lalala" with: {
   bolt: {
     parallelism: 3
     groups_on_fields: ["name"] from: random_names # alternatively just use 1 (the spout's id) here.
-    subscribe_to: 'url grouped_on: ["name"] from: random_names
+    subscribes_to: 'url grouped_on: ["name"] from: random_names
     LalalaBolt new
   }
 }

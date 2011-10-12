@@ -68,8 +68,8 @@ FancySpec describe: Storm Topology with: {
 
       @b2 = bolt: {
         parallelism: 10
-        subscribe_to: 'stream1 grouped_on: ["f2"] from: @s3
-        subscribe_to: 'stream2 grouped_on: ["f3", "f5"] from: @s3
+        subscribes_to: 'stream1 grouped_on: ["f2"] from: @s3
+        subscribes_to: 'stream2 grouped_on: ["f3", "f5"] from: @s3
       }
     }
     t bolts empty? is: false
