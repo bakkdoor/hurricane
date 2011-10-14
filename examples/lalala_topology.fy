@@ -12,20 +12,9 @@ class RandomWordSpout : Storm Spout {
 
 class LalalaBolt : Storm Bolt {
   output_fields: ["lalala_name"]
-
-  output_streams: {
-    @url = stream: {
-      fields: ["foo", "bar"]
-      direct: true  # optional, defaults to false
-    }
-    @foo = stream: {
-      fields: ["bar", "baz"]
-      direct: false # optional, defaults to false
-    }
-  }
-
   def process: tuple {
     emit: [tuple[0] + "lalala"]
+    ack: tuple
   }
 }
 
@@ -37,8 +26,7 @@ lalala = Storm Topology new: "lalala" with: {
 
   bolt: {
     parallelism: 3
-    groups_on_fields: ["name"] from: random_names # alternatively just use 1 (the spout's id) here.
-    subscribes_to: 'url grouped_on: ["name"] from: random_names
+    groups_on_fields: ["name"] from: random_names
     LalalaBolt new
   }
 }

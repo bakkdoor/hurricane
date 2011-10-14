@@ -25,5 +25,9 @@ class Storm {
     def add: stream fields: fields bolt: bolt {
       @groupings[bolt]: (stream, fields)
     }
+
+    def add: stream bolt: bolt {
+      @groupings[bolt]: (stream, nil)
+    }
   }
 }

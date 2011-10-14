@@ -30,6 +30,11 @@ class Storm {
     def Component output_fields: fields {
       @@output_fields = fields
     }
+
+    def Component output_field: field {
+      @@output_fields = [field]
+    }
+
     def Component parallelism: p {
       @@parallelism = p
     }

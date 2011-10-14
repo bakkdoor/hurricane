@@ -28,7 +28,15 @@ class Storm {
 
       def subscribes_to: stream grouped_on: fields from: bolt {
         { @grouping = MultiGrouping new } unless: (@grouping is_a?: MultiGrouping)
-        @grouping add: stream fields: fields bolt: bolt
+        if: fields then: {
+          @grouping add: stream fields: fields bolt: bolt
+        } else: {
+          @grouping add: stream bolt: bolt
+        }
+      }
+
+      def subscribes_to: stream from: bolt {
+        subscribes_to: stream grouped_on: nil from: bolt
       }
     }
 
