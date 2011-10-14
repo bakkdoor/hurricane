@@ -1,4 +1,4 @@
-require: "stormi.fy"
+require: "storm"
 
 class RandomWordSpout : Storm Spout {
   output_fields: ["name"]
@@ -31,4 +31,4 @@ lalala = Storm Topology new: "lalala" with: {
   }
 }
 
-Storm submit_topology: lalala
+Storm local_cluster submit_topology: lalala

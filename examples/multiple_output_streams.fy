@@ -1,4 +1,4 @@
-require: "stormi.fy"
+require: "storm"
 
 class MultipleStreamSpout : Storm Spout {
   Cities =

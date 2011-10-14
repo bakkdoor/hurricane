@@ -1,6 +1,0 @@
-require: "stormify/topology"
-require: "stormify/grouping"
-require: "stormify/component"
-require: "stormify/bolt"
-require: "stormify/spout"
-require: "stormify/storm"
