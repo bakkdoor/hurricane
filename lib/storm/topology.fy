@@ -42,13 +42,13 @@ class Storm {
       bolts = <[]>
       state_spouts = <[]> # not used yet
 
-      @spouts map: 'to_thrift . each: |pair| {
-        id, spoutspec = pair
+      @spouts each: |s| {
+        id, spoutspec = s to_thrift
         spouts[id]: spoutspec
       }
 
-      @bolts map: 'to_thrift . each: |pair| {
-        id, boltspec = pair
+      @bolts each: |b| {
+        id, boltspec = b to_thrift
         bolts[id]: boltspec
       }
 
