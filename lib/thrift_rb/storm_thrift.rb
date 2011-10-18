@@ -1,4 +1,3 @@
-require "rubygems"
 require "thrift"
 
 $: << File.expand_path(File.dirname(__FILE__))
