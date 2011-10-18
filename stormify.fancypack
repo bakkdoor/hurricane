@@ -6,5 +6,5 @@ Fancy Package Specification new: "stormify" with: {
   homepage: "http://www.fancy-lang.org"
   version: "0.1.0"
   dependencies: [["bakkdoor/fyzmq"]]
-  ruby_dependencies: [["json"]]
+  ruby_dependencies: [["json", "thrift", "thrift_client"]]
 }
