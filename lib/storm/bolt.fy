@@ -7,7 +7,9 @@ class Storm {
 
     include: Storm Protocol
 
-    def initialize: @conf context: @context
+    def initialize: @conf context: @context {
+      super initialize
+    }
 
     def process: tuple
 
