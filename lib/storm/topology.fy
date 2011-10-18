@@ -1,53 +1,9 @@
+require: "topology/component_def"
+require: "topology/bolt_def"
+require: "topology/spout_def"
+
 class Storm {
   class Topology {
-    class ComponentDef {
-      @@component_ids = 0
-      def ComponentDef next_id {
-        @@component_ids = @@component_ids + 1
-        @@component_ids
-      }
-      read_write_slots: ('id, 'parallelism)
-      def initialize: @topology {
-        @parallelism = 1
-        @id = ComponentDef next_id
-      }
-    }
-
-    class BoltDef : ComponentDef {
-      read_write_slots: ('bolt, 'grouping)
-      def initialize: topology with: block {
-        initialize: topology
-        @grouping = Grouping none
-        @bolt = block call_with_receiver: self
-      }
-
-      def groups_on_fields: fields from: id {
-        { id = id id } if: (id is_a?: ComponentDef)
-        @grouping = Grouping fields: fields from: id
-      }
-
-      def subscribes_to: stream grouped_on: fields from: bolt {
-        { @grouping = MultiGrouping new } unless: (@grouping is_a?: MultiGrouping)
-        if: fields then: {
-          @grouping add: stream fields: fields bolt: bolt
-        } else: {
-          @grouping add: stream bolt: bolt
-        }
-      }
-
-      def subscribes_to: stream from: bolt {
-        subscribes_to: stream grouped_on: nil from: bolt
-      }
-    }
-
-    class SpoutDef : ComponentDef {
-      read_slot: 'spout
-      def initialize: topology with: block {
-        initialize: topology
-        @spout = block call_with_receiver: self
-      }
-    }
-
     read_slots: ('bolts, 'spouts, 'name)
 
     def initialize: @name with: block {
@@ -79,6 +35,24 @@ class Storm {
         }
       }
       super receive_message: m with_params: p
+    }
+
+    def to_thrift {
+      spouts = <[]>
+      bolts = <[]>
+      state_spouts = <[]> # not used yet
+
+      @spouts map: 'to_thrift . each: |pair| {
+        id, spoutspec = pair
+        spouts[id]: spoutspec
+      }
+
+      @bolts map: 'to_thrift . each: |pair| {
+        id, boltspec = pair
+        bolts[id]: boltspec
+      }
+
+      StormTopology new(<['spouts => spouts, 'bolts => bolts, 'state_spouts => state_spouts]>)
     }
   }
 }
