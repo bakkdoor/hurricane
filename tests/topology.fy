@@ -1,4 +1,4 @@
-require: "storm"
+require: "../lib/storm"
 
 FancySpec describe: Storm Topology with: {
   it: "creates an empty topology" when: {
