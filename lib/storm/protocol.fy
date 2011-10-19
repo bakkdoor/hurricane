@@ -56,7 +56,7 @@ class Storm {
     }
 
     def emit_tuple: tup stream: stream (nil) anchors: anchors ([]) direct: direct (nil) {
-      m = <['command => 'emit, 'anchors => anchors map: 'id, 'tuple => tup]>
+      m = <['command => 'emit, 'anchors => anchors map: 'id, 'tuple => tup to_a]>
       { m['stream]: stream } if: stream
       { m['task]: direct } if: direct
       send: m
