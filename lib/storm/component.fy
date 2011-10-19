@@ -1,5 +1,7 @@
 class Storm {
   class Component {
+    include: Storm Protocol
+
     class OutputStreamDef {
       @@stream_id = 0
       def OutputStreamDef next_id {
@@ -7,12 +9,13 @@ class Storm {
         @@stream_id
       }
 
-      read_write_slots: ('fields, 'direct, 'id)
+      read_write_slots: ('fields, 'direct, 'id, 'name)
 
       def initialize {
         @fields = []
         @direct = false
         @id = OutputStreamDef next_id
+        @name = nil
       }
     }
 
@@ -25,17 +28,15 @@ class Storm {
       }
     }
 
-    @@output_streams = []
+    @@output_streams = <[]>
 
     def Component output_streams: block {
-      @@output_streams = []
+      @@output_streams = <[]>
       OutputStreamsDef new: self . do: block
     }
 
     def Component add_stream: s {
-      id = @@output_streams size
-      s id: id
-      @@output_streams << s
+      @@output_streams[s name]: s
     }
 
     def Component output_fields: fields {
@@ -51,7 +52,7 @@ class Storm {
     }
 
     def Component output_streams {
-      @@output_streams
+      @@output_streams values
     }
 
     def Component output_fields {
@@ -64,6 +65,11 @@ class Storm {
 
     def output_fields {
       @@output_fields
+    }
+
+    def on: stream_name emit: tup anchors: anchors ([]) direct: direct (nil) {
+      stream_id = @@output_streams[stream_name] id
+      emit: tup stream: stream_id anchors: anchors direct: direct
     }
   }
 }

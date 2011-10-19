@@ -5,8 +5,6 @@ class Storm {
     emit new @Storm Tuple@s on their output stream (possible consumed by other Bolts).
     """
 
-    include: Storm Protocol
-
     def initialize: @conf context: @context {
       super initialize
     }

@@ -37,26 +37,28 @@ FancySpec describe: Storm Topology with: {
   it: "creates a topology with multiple bolts and spouts" when: {
     class MultipleOutputStreamsSpout : Storm Spout {
       output_streams: {
-        @stream1 = stream: {
+        stream: {
           fields: ["f1", "f2"]
           direct: true
+          name: 'stream1
         }
-        @stream2 = stream: {
+        stream: {
           fields: ["f3", "f4", "f5"]
+          name: 'stream2
         }
       }
     }
 
     t = Storm Topology new: "test3" with: {
       @s1 = spout: {
-        Storm Spout new
+        Storm Spout
       }
       @s2 = spout: {
         parallelism: 5
-        Storm Spout new
+        Storm Spout
       }
       @s3 = spout: {
-        MultipleOutputStreamsSpout new
+        MultipleOutputStreamsSpout
       }
 
       @b1 = bolt: {

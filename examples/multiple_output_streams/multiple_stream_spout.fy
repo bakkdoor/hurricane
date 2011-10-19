@@ -17,19 +17,21 @@ class MultipleStreamSpout : Storm Spout {
      ("Cindy", 40))
 
   output_streams: {
-    @person_stream = stream: {
+    stream: {
       fields: ('name, 'age)
+      name: 'person_stream
     }
-    @city_stream = stream: {
+    stream: {
       fields: ('name, 'country)
       direct: true  # optional, defaults to false
+      name: 'city_stream
     }
   }
 
   def run {
     loop: {
-      @city_stream emit: $ Cities random
-      @person_stream emit: $ People random
+      on: 'person_stream emit: $ People random
+      on: 'city_stream emit: $ Cities random
     }
   }
 }

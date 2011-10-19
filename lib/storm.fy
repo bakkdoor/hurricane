@@ -3,9 +3,9 @@ require("json")
 
 require: "storm/topology"
 require: "storm/grouping"
+require: "storm/protocol"
 require: "storm/component"
 require: "storm/tuple"
-require: "storm/protocol"
 require: "storm/bolt"
 require: "storm/spout"
 require: "storm/cluster"
