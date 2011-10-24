@@ -4,12 +4,19 @@ class Storm {
       NoneGrouping new
     }
 
+    def Grouping shuffle {
+      ShuffleGrouping new
+    }
+
     def Grouping fields: fields from: id {
       FieldsGrouping new: fields from: id
     }
   }
 
   class NoneGrouping : Grouping {
+  }
+
+  class ShuffleGrouping : Grouping {
   }
 
   class FieldsGrouping : Grouping {

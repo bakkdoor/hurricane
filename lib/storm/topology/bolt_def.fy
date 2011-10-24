@@ -8,7 +8,7 @@ class Storm {
         @bolt = block call_with_receiver: self
       }
 
-      def groups_on_fields: fields from: id {
+      def groups_on_fields: fields from: id (nil) {
         { id = id id } if: (id is_a?: ComponentDef)
         @grouping = Grouping fields: fields from: id
       }
