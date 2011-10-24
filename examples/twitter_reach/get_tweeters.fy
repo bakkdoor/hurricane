@@ -5,7 +5,7 @@ class GetTweeters : Storm Bolt {
     "tech.backtype.com/blog/123" => ["tim", "mike", "john"]
   ]>
 
-  ouput_fields: ("id", "tweeter")
+  output_fields: ("id", "tweeter")
 
   def process: tuple {
     id, url = tuple
