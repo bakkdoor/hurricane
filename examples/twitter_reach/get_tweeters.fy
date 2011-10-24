@@ -17,3 +17,7 @@ class GetTweeters : Storm Bolt {
     }
   }
 }
+
+if: (ARGV main?: __FILE__) then: {
+  GetTweeters new run
+}

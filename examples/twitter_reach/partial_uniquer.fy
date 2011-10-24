@@ -20,3 +20,7 @@ class PartialUniquer : Storm Bolt {
     emit: (id, count)
   }
 }
+
+if: (ARGV main?: __FILE__) then: {
+  PartialUniquer new run
+}

@@ -25,13 +25,13 @@ reach = Storm LinearDRPCTopology new: "reach" with: {
   bolt: {
     parallelism: 6
     groups_on_fields: ("id", "follower")
-    PartialUniquer new
+    PartialUniquer
   }
 
   bolt: {
     parallelism: 2
     groups_on_fields: ["id"]
-    CountAggregator new
+    CountAggregator
   }
 }
 

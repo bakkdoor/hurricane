@@ -21,3 +21,7 @@ class GetFollowers : Storm Bolt {
     }
   }
 }
+
+if: (ARGV main?: __FILE__) then: {
+  GetFollowers new run
+}

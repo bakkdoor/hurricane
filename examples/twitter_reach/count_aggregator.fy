@@ -16,3 +16,7 @@ class CountAggregator : Storm Bolt {
     emit: (id, reach)
   }
 }
+
+if: (ARGV main?: __FILE__) then: {
+  CountAggregator new run
+}
