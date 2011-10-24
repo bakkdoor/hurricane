@@ -18,7 +18,7 @@ reach = Storm LinearDRPCTopology new: "reach" with: {
 
   bolt: {
     parallelism: 12
-    grouping: $ Grouping shuffle
+    shuffle_grouping
     GetFollowers
   }
 
@@ -35,13 +35,13 @@ reach = Storm LinearDRPCTopology new: "reach" with: {
   }
 }
 
-conf = Config new: {
+conf = Storm Config new: {
   max_task_parallelism: 2
 }
 
 if: (ARGV size == 0) then: {
   conf max_task_parallelism: 3
-  drpc = LocalDRPC new
+  drpc = Storm LocalDRPC new
   reach drpc: drpc
   Storm local_cluster submit_topology: reach with_config: conf
 
@@ -52,5 +52,5 @@ if: (ARGV size == 0) then: {
 } else: {
   conf num_workers: 6
   reach name: $ ARGV[0]
-  Storm submit_topology: reach with_config: conf
+  Storm remote_cluster submit_topology: reach with_config: conf
 }
