@@ -1,3 +1,5 @@
+require: "storm"
+
 class PartialUniquer : Storm Bolt {
   output_fields: ("id", "partial-count")
   def initialize: @sets (<[]>) {}

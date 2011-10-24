@@ -1,3 +1,5 @@
+require: "storm"
+
 class CountAggregator : Storm Bolt {
   output_fields: ("id", "reach")
   def initialize: @counts (<[]>) {}

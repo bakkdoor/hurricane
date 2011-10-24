@@ -1,3 +1,5 @@
+require: "storm"
+
 class GetFollowers : Storm Bolt {
   FOLLOWERS_DB = <[
     "sally" => ["bob", "tim", "alice", "adam", "jim", "chris", "jai"],

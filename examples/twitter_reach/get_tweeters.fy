@@ -1,3 +1,5 @@
+require: "storm"
+
 class GetTweeters : Storm Bolt {
   TWEETERS_DB = <[
     "foo.com/blog/1" => ["sally", "bob", "tim", "george", "nathan"],
