@@ -2,6 +2,7 @@ require("rubygems")
 require("json")
 
 require: "storm/topology"
+require: "storm/config"
 require: "storm/grouping"
 require: "storm/protocol"
 require: "storm/component"
