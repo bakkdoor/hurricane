@@ -4,7 +4,8 @@ require: "topology/spout_def"
 
 class Storm {
   class Topology {
-    read_slots: ('bolts, 'spouts, 'name)
+    read_slots: ('bolts, 'spouts)
+    read_write_slot: 'name
 
     def initialize: @name with: block {
       @bolts = []
@@ -55,4 +56,6 @@ class Storm {
       StormTopology new(<['spouts => spouts, 'bolts => bolts, 'state_spouts => state_spouts]>)
     }
   }
+
+  class LinearDRPCTopology : Topology
 }

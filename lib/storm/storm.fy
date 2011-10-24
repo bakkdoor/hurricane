@@ -6,4 +6,8 @@ class Storm {
   def Storm remote_cluster {
     RemoteCluster new
   }
+
+  class LocalDRPC {
+    # TODO
+  }
 }

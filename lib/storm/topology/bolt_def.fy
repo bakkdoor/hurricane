@@ -13,6 +13,10 @@ class Storm {
         @grouping = Grouping fields: fields from: id
       }
 
+      def shuffle_grouping {
+        @grouping = Grouping shuffle
+      }
+
       def subscribes_to: stream grouped_on: fields from: bolt {
         { @grouping = MultiGrouping new } unless: (@grouping is_a?: MultiGrouping)
         if: fields then: {
