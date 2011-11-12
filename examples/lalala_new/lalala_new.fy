@@ -6,9 +6,7 @@ lalala = Storm Topology new: "lalala" with: {
       words: { name }
     }
     parallelism: 10
-    initialize: |words| {
-      @words = words
-    }
+    initialize: { words }
     process: {
       words <- (@words random) true # acked
     }
@@ -24,9 +22,7 @@ lalala = Storm Topology new: "lalala" with: {
 }
 
 lalala run_with: {
-  RandomWordSpout -> {
-    initialize: ("chris", "mike", "nathan")
-  }
+  RandomWordSpout -> { ("chris", "mike", "nathan") }
   LalalaBolt -> {}
 }
 
