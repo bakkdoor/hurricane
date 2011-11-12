@@ -18,7 +18,7 @@ lalala = Storm Topology new: "lalala" with: {
     streams: { lalala_words }
     parallelism: 3
     RandomWordSpout words: { name } . process: |tuple| {
-     lalala_words <- (tuple[0] + "lalala") true
+      lalala_words <- (tuple[0] + "lalala") true
     }
   }
 }
