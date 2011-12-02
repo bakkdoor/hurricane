@@ -1,4 +1,4 @@
-*storm_definition*
+*storm_definition* = false
 class Storm {
   def Storm local_cluster {
     LocalCluster new
