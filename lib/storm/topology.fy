@@ -8,21 +8,18 @@ class Storm {
     read_write_slot: 'name
 
     def initialize: @name with: block {
+      @components = <[]>
       @bolts = []
       @spouts = []
-      self do: block
+      block call: [self]
     }
 
-    def bolt: block {
-      b = BoltDef new: self with: block
-      @bolts << b
-      b
+    def bolts: block {
+      @bolts = block to_hash
     }
 
-    def spout: block {
-      s = SpoutDef new: self with: block
-      @spouts << s
-      s
+    def spouts: block {
+      @spouts = block to_hash
     }
 
     # handle dynamic slot accessor messages
@@ -36,6 +33,10 @@ class Storm {
         }
       }
       super receive_message: m with_params: p
+    }
+
+    def component: component_name {
+      @components[component_name]
     }
 
     def to_thrift {
@@ -54,6 +55,10 @@ class Storm {
       }
 
       StormTopology new(<['spouts => spouts, 'bolts => bolts, 'state_spouts => state_spouts]>)
+    }
+
+    def to_s {
+      "'#{@name}'"
     }
   }
 

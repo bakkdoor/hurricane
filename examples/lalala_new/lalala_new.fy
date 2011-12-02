@@ -1,6 +1,6 @@
 require: "storm"
 
-RandomWordSpout = spout: {
+RandomWordSpout = spout: @{
   # for multiple streams use this:
   # streams: { names: { name } }
   # for single stream (default) use this:
@@ -17,29 +17,29 @@ RandomWordSpout = spout: {
   process: {
     # refer to streams by their name.
     # in this case we just use the default stream:
-    default <- (@words random) true # acked
+    default <- (@words random)
   }
 }
 
-LalalaBolt = bolt: {
+LalalaBolt = bolt: @{
   fields: { lalala_name }
-  slots: { random_words }
-  # if there are multiple output streams use this:
-  # RandomWordSpout names: { name } . process: |tuple| {
-  # in our case we just group on the default stream's fields directly:
-  @random_words grouped: { name } . process: |tuple| {
-    default <- (tuple[0] + "lalala") true
+  process: |tuple| {
+    default <- (tuple[0] + "lalala") # auto-acked, call false if not acked
   }
 }
 
 lalala = Storm Topology new: "lalala" with: @{
   spouts: {
     # use names instead of numbers for components:
-    random_words: $ RandomWordSpout new: [("chris", "mike", "nathan")] . with: { parallelism: 10 }
+    random_words: $ RandomWordSpout new: [("chris", "mike", "nathan")] with: @{ parallelism: 10 }
   }
   bolts: {
     # refer to other components via their name:
-    lalala: $ LalalaBolt new: [random_words] . with: @{ parallelism: 3 }
+    lalala: $ LalalaBolt new with: @{
+      parallelism: 3
+      # in our case we just group on the default stream's fields directly:
+      fields_grouping: { name } on: 'random_words
+    }
   }
 }
 

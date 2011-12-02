@@ -1,3 +1,4 @@
+*storm_definition*
 class Storm {
   def Storm local_cluster {
     LocalCluster new
@@ -9,5 +10,9 @@ class Storm {
 
   class LocalDRPC {
     # TODO
+  }
+
+  def Storm in_definition: block {
+    let: '*storm_definition* be: true in: block
   }
 }

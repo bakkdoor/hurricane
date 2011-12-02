@@ -1,70 +1,75 @@
 class Storm {
   class Component {
+    class Config {
+      read_write_slots: ('parallelism, 'grouping)
+      def fields_grouping: fields on: component_name {
+        @grouping = FieldsGrouping new: (fields to_a) component: component_name
+      }
+    }
+
     include: Storm Protocol
+    read_slots: ('fields, 'streams)
 
-    class OutputStreamDef {
-      @@stream_id = 0
-      def OutputStreamDef next_id {
-        @@stream_id = @@stream_id + 1
-        @@stream_id
+    def Component new: block {
+      component_class = self subclass: block
+    }
+
+    def initialize {
+      @fields = Set new
+      @streams = Set new
+      @slots = []
+
+      setup_constructor_methods
+    }
+
+    def setup_constructor_methods {
+      def self new {
+        @slots each: |s| {
+          set_slot: s value: nil
+        }
+        self
       }
 
-      read_write_slots: ('fields, 'direct, 'id, 'name)
+      def self new: args {
+        @slots each_with_index: |s i| {
+          set_slot: s value: $ args[i]
+        }
+        self
+      }
 
-      def initialize {
-        @fields = []
-        @direct = false
-        @id = OutputStreamDef next_id
-        @name = nil
+      def self new: args with: config_block {
+        new: args
+        with: config_block
       }
     }
 
-    class OutputStreamsDef {
-      def initialize: @bolt
+    def fields: block {
+      @fields = Set new: $ block to_a
+    }
 
-      def stream: block {
-        streamdef = OutputStreamDef new do: block
-        @bolt add_stream: streamdef
+    def slots: block {
+      @slots = block to_a
+      @slots each: |s| {
+        set_slot: s value: nil
       }
     }
 
-    @@output_streams = <[]>
-
-    def Component output_streams: block {
-      @@output_streams = <[]>
-      OutputStreamsDef new: self . do: block
+    def process: process_block  {
+      @process_block = process_block
     }
 
-    def Component add_stream: s {
-      @@output_streams[s name]: s
-    }
-
-    def Component output_fields: fields {
-      @@output_fields = fields
-    }
-
-    def Component output_field: field {
-      @@output_fields = [field]
-    }
-
-    def Component parallelism: p {
-      @@parallelism = p
-    }
-
-    def Component output_streams {
-      @@output_streams values
-    }
-
-    def Component output_fields {
-      @@output_fields
+    def with: config_block {
+      @conf = Config new
+      config_block call: [@conf]
+      self
     }
 
     def output_streams {
-      @@output_streams
+      @output_streams values
     }
 
-    def output_fields {
-      @@output_fields
+    def fields {
+      @fields
     }
 
     def on: stream_name emit: tup anchors: anchors ([]) direct: direct (nil) {
