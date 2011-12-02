@@ -1,7 +1,9 @@
 class Storm {
   class Spout : Component {
     def run {
-      # TODO
+      loop: {
+        @process_block call_with_receiver: self
+      }
     }
   }
 }
