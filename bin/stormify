@@ -1,0 +1,15 @@
+#!/usr/bin/env fancy
+
+#ARGV = ARGV rest # ignore first param
+require: "../lib/storm"
+
+topology_file = ARGV[1]
+
+if: topology_file then: {
+  Storm in_definition: {
+    require: topology_file
+  }
+} else: {
+  *stderr* println: "No file given. Aborting."
+  System exit: 1
+}
