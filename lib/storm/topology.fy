@@ -36,7 +36,12 @@ class Storm {
     }
 
     def component: component_name {
-      @components[component_name]
+      component_name = component_name to_sym
+      if: (@bolts[component_name]) then: |b| {
+        b
+      } else: {
+        @spouts[component_name]
+      }
     }
 
     def to_thrift {

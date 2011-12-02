@@ -26,9 +26,7 @@ class Storm {
     }
 
     def run_component: comp with_args: args ([]) {
-      "Component: #{comp}" println
-      "Args: #{args inspect}" println
-      c new: args . run
+      comp new: args . run
     }
   }
 
