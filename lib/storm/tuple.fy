@@ -5,9 +5,10 @@ class Storm {
     Contains a unique id, the component, stream and task it came from and the values associated with it.
     """
 
-    read_write_slots: [ 'id, 'component, 'stream, 'task, 'values ]
+    include: FancyEnumerable
+    read_write_slots: ('id, 'component, 'stream, 'task, 'values)
 
-    def initialize: @id component: @component stream: @stream task: @task values: @values {}
+    def initialize: @id component: @component stream: @stream task: @task values: @values
 
     def Tuple from_hash: hash {
       """
@@ -19,6 +20,10 @@ class Storm {
 
       id, component, stream, task, values = hash values_at: ("id", "comp", "stream", "task", "tuple")
       Tuple new: id component: component stream: stream task: task values: values
+    }
+
+    def each: block {
+      @values each: block
     }
   }
 }
