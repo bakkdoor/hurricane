@@ -2,7 +2,7 @@ class Storm {
   class Protocol {
     """
     Storm Protocol class.
-    Contains all methods implementing the Storm multilang protocol using stdio.
+    Contains all methods implementing the Storm multilang protocol using STDIO.
     """
 
     Input = STDIN

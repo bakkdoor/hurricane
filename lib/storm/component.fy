@@ -1,6 +1,16 @@
 class Storm {
   class Component {
+    """
+    Base class for Storm components, including @Storm::Spout@s and @Storm::Bolt@s.
+    A component is anything that can send and receive @Storm::Tuple@s via streams in realtime.
+    """
+
     class Config {
+      """
+      Component Configuration class.
+      Used for topology configuration purposes.
+      """
+
       read_write_slots: ('parallelism, 'grouping)
       def fields_grouping: fields on: component_name {
         @grouping = FieldsGrouping new: (fields to_a) component: component_name
@@ -9,10 +19,6 @@ class Storm {
 
     include: Storm Protocol
     read_slots: ('fields, 'streams)
-
-    def Component new: block {
-      component_class = self subclass: block
-    }
 
     def initialize {
       @fields = Set new
