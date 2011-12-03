@@ -17,9 +17,12 @@ class Storm {
     def initialize {
       @fields = Set new
       @slots = []
+      @initialize_block = {} # does nothing by default
 
       setup_constructor_methods
     }
+
+    def initialize: @initialize_block
 
     def setup_streams {
       @streams = <['default => OutputStream new: self name: 'default fields: @fields]>
@@ -27,20 +30,17 @@ class Storm {
     }
 
     def setup_constructor_methods {
-      def self new {
-        @slots each: |s| {
-          set_slot: s value: nil
-        }
-        setup_streams
-        self
-      }
-
       def self new: args {
         @slots each_with_index: |s i| {
           set_slot: s value: $ args[i]
         }
         setup_streams
+        @initialize_block call_with_receiver: self
         self
+      }
+
+      def self new {
+        new: []
       }
 
       def self new: args with: config_block {

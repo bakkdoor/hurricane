@@ -5,28 +5,26 @@ class Storm {
         "Submitting topology: #{top} to cluster: #{self}" println
         submit_thrift_topology: top with_config: conf
       } else: {
-        with_component: |component, args| {
-          run_component: component with_args: args
+        with_component: |component| {
+          component run
         } in: top
       }
     }
 
     def with_component: block in: topology {
-      _, component_name, *args = ARGV
-      if: (topology component: component_name) then: |comp| {
-        block call: (comp, args)
-      } else: {
-        *stderr* println: "Invalid component specified: #{component_name inspect}"
-        System exit: 1
+      _, component_name = ARGV
+
+      unless: component_name do: {
+        System abort: "No component name given. Aborting."
+      }
+
+      if: (topology component: component_name) then: block else: {
+        System abort: "Invalid component specified: #{component_name inspect}"
       }
     }
 
     def submit_thrift_topology: top with_config: conf (nil) {
       # TODO
-    }
-
-    def run_component: comp with_args: args ([]) {
-      comp new: args . run
     }
   }
 
