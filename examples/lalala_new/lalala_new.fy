@@ -11,7 +11,7 @@ RandomWordSpout = spout: @{
   # optionally, you can also define a block of code to be run as part of initialization
   # after the slots have been assigned the passed-in values (if any), like so:
   # initialize: {
-    # do something in here if necessary (optional)
+  #   # do something in here if necessary (optional)
   # }
   # process: defines the code for emitting & processing tuples
   process: {
@@ -30,15 +30,14 @@ LalalaBolt = bolt: @{
 
 lalala = Storm Topology new: "lalala" with: @{
   spouts: {
-    # use names instead of numbers for components:
+    # spout is named "random_words"
     random_words: $ RandomWordSpout new: [("chris", "mike", "nathan")] with: @{ parallelism: 10 }
   }
   bolts: {
-    # refer to other components via their name:
     lalala: $ LalalaBolt new with: @{
       parallelism: 3
       # in our case we just group on the default stream's fields directly:
-      fields_grouping: { name } on: 'random_words
+      fields_grouping: { name } on: 'random_words # refer to other components via their name:
     }
   }
 }
