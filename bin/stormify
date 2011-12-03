@@ -1,6 +1,5 @@
 #!/usr/bin/env fancy
 
-#ARGV = ARGV rest # ignore first param
 require: "../lib/storm"
 
 topology_file = ARGV[1]
