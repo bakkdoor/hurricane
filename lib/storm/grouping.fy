@@ -20,7 +20,7 @@ class Storm {
   }
 
   class FieldsGrouping : Grouping {
-    read_slot: ('fields, 'component)
+    read_slots: ('fields, 'component)
     def initialize: @fields component: @component
   }
 

@@ -5,7 +5,9 @@ class Storm {
     Contains a unique id, the component, stream and task it came from and the values associated with it.
     """
 
-    include: FancyEnumerable
+    provides_interface: 'each:
+    include: Fancy Enumerable
+
     read_write_slots: ('id, 'component, 'stream, 'task, 'values)
 
     def initialize: @id component: @component stream: @stream task: @task values: @values
