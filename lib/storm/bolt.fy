@@ -5,11 +5,45 @@ class Storm {
     emit new @Storm Tuple@s on their output stream (possible consumed by other Bolts).
     """
 
-    def initialize: @conf context: @context {
-      super initialize
+    class ClassMethods {
+      def input: input_fields {
+        @input_fields = input_fields to_a
+        @input_fields each_with_index: |f i| {
+          class_eval: """
+          def #{f} { @tuple[#{i}] }
+          """
+        }
+      }
+
+      def ack_on_success: @ack_on_success
+      def ack_on_success? {
+        @ack_on_success true?
+      }
+
+      def anchor_tuples: @anchor_tuples {
+        if: anchor_tuples? then: {
+          @output_streams each_key: |name| {
+            class_eval: """
+            def #{name}: tuple_out {
+              @streams[#{name inspect}] <- (tuple_out anchor: @tuple)
+            }
+            """
+          }
+        }
+      }
+      def anchor_tuples? {
+        @anchor_tuples true?
+      }
     }
 
-    def process: tuple
+    extend: ClassMethods
+
+    def process: @tuple {
+      try {
+        process
+        { @tuple ack! } if: ack_on_success?
+      } catch {}
+    }
 
     def run {
       """
@@ -28,6 +62,13 @@ class Storm {
       } catch Exception => e {
         log: e
       }
+    }
+  }
+
+  class BlockBolt : Bolt {
+    def initialize: @block
+    def --> component {
+
     }
   }
 }
