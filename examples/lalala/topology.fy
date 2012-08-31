@@ -1,18 +1,16 @@
-require: "storm"
-require: "random_word_spout"
-require: "lalala_bolt"
+require: "random_words"
+require: "lalala"
 
-lalala = Storm Topology new: "lalala" with: {
-  random_names = spout: {
-    parallelism: 10
-    RandomWordSpout
-  }
+class LalalaTopology : Storm Topology {
+  setup: {
+    RandomWords --> { name } ---> Lalala
 
-  bolt: {
-    parallelism: 3
-    groups_on_fields: ["name"] from: random_names
-    LalalaBolt
+    RandomWords config: @{
+      setup: @{ names: ["chris", "mike", "nathan"] }
+      parallelism: 10
+    }
+    Lalala config: @{ parallelism: 3 }
   }
 }
 
-Storm local_cluster submit_topology: lalala
+Storm local_cluster submit_topology: LalalaTopology
