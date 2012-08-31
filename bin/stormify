@@ -9,6 +9,5 @@ if: topology_file then: {
     require: topology_file
   }
 } else: {
-  *stderr* println: "No file given. Aborting."
-  System exit: 1
+  System abort: "No file given. Aborting."
 }
