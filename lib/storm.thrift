@@ -17,7 +17,13 @@ struct JavaObject {
 }
 
 struct NullStruct {
-  
+
+}
+
+struct GlobalStreamId {
+  1: required string componentId;
+  2: required string streamId;
+  #Going to need to add an enum for the stream type (NORMAL or FAILURE)
 }
 
 union Grouping {
@@ -28,6 +34,7 @@ union Grouping {
   5: NullStruct direct; // this bolt expects the source bolt to send tuples directly to it
   6: JavaObject custom_object;
   7: binary custom_serialized;
+  8: NullStruct local_or_shuffle; // prefer sending to tasks in the same worker process, otherwise shuffle
 }
 
 struct StreamInfo {
@@ -36,6 +43,7 @@ struct StreamInfo {
 }
 
 struct ShellComponent {
+  // should change this to 1: required list<string> execution_command;
   1: string execution_command;
   2: string script;
 }
@@ -47,26 +55,30 @@ union ComponentObject {
 }
 
 struct ComponentCommon {
-  1: required map<string, StreamInfo> streams; //key is stream id
-  2: optional i32 parallelism_hint; //how many threads across the cluster should be dedicated to this component
+  1: required map<GlobalStreamId, Grouping> inputs;
+  2: required map<string, StreamInfo> streams; //key is stream id
+  3: optional i32 parallelism_hint; //how many threads across the cluster should be dedicated to this component
+
+  // component specific configuration respects:
+  // topology.debug: false
+  // topology.max.task.parallelism: null // can replace isDistributed with this
+  // topology.max.spout.pending: null
+  // topology.kryo.register // this is the only additive one
+
+  // component specific configuration
+  4: optional string json_conf;
 }
 
 struct SpoutSpec {
   1: required ComponentObject spout_object;
   2: required ComponentCommon common;
-  3: required bool distributed;
-}
-
-struct GlobalStreamId {
-  1: required string componentId;
-  2: required string streamId;
-  #Going to need to add an enum for the stream type (NORMAL or FAILURE)
+  // can force a spout to be non-distributed by overriding the component configuration
+  // and setting TOPOLOGY_MAX_TASK_PARALLELISM to 1
 }
 
 struct Bolt {
-  1: required map<GlobalStreamId, Grouping> inputs; //a join would have multiple inputs
-  2: required ComponentObject bolt_object;
-  3: required ComponentCommon common;
+  1: required ComponentObject bolt_object;
+  2: required ComponentCommon common;
 }
 
 // not implemented yet
@@ -78,10 +90,10 @@ struct StateSpoutSpec {
 
 struct StormTopology {
   //ids must be unique across maps
+  // #workers to use is in conf
   1: required map<string, SpoutSpec> spouts;
   2: required map<string, Bolt> bolts;
   3: required map<string, StateSpoutSpec> state_spouts;
-  // #workers to use is in conf
 }
 
 exception AlreadyAliveException {
@@ -100,16 +112,17 @@ struct TopologySummary {
   1: required string id;
   2: required string name;
   3: required i32 num_tasks;
-  4: required i32 num_workers;
-  5: required i32 uptime_secs;
-  6: required string status;
+  4: required i32 num_executors;
+  5: required i32 num_workers;
+  6: required i32 uptime_secs;
+  7: required string status;
 }
 
 struct SupervisorSummary {
   1: required string host;
   2: required i32 uptime_secs;
   3: required i32 num_workers;
-  4: required i32 num_used_workers;  
+  4: required i32 num_used_workers;
 }
 
 struct ClusterSummary {
@@ -124,8 +137,8 @@ struct ErrorInfo {
 }
 
 struct BoltStats {
-  1: required map<string, map<GlobalStreamId, i64>> acked;  
-  2: required map<string, map<GlobalStreamId, i64>> failed;  
+  1: required map<string, map<GlobalStreamId, i64>> acked;
+  2: required map<string, map<GlobalStreamId, i64>> failed;
   3: required map<string, map<GlobalStreamId, double>> process_ms_avg;
 }
 
@@ -135,61 +148,78 @@ struct SpoutStats {
   3: required map<string, map<string, double>> complete_ms_avg;
 }
 
-union TaskSpecificStats {
+union ExecutorSpecificStats {
   1: BoltStats bolt;
   2: SpoutStats spout;
 }
 
 // Stats are a map from the time window (all time or a number indicating number of seconds in the window)
 //    to the stats. Usually stats are a stream id to a count or average.
-struct TaskStats {
+struct ExecutorStats {
   1: required map<string, map<string, i64>> emitted;
   2: required map<string, map<string, i64>> transferred;
-  3: required TaskSpecificStats specific;
+  3: required ExecutorSpecificStats specific;
 }
 
-struct TaskSummary {
-  1: required i32 task_id;
+struct ExecutorInfo {
+  1: required i32 task_start;
+  2: required i32 task_end;
+}
+
+struct ExecutorSummary {
+  1: required ExecutorInfo executor_info;
   2: required string component_id;
   3: required string host;
   4: required i32 port;
   5: required i32 uptime_secs;
-  6: required list<ErrorInfo> errors;
-  7: optional TaskStats stats;
+  7: optional ExecutorStats stats;
 }
 
 struct TopologyInfo {
   1: required string id;
   2: required string name;
   3: required i32 uptime_secs;
-  4: required list<TaskSummary> tasks;
+  4: required list<ExecutorSummary> executors;
   5: required string status;
+  6: required map<string, list<ErrorInfo>> errors;
 }
 
 struct KillOptions {
   1: optional i32 wait_secs;
 }
 
+struct RebalanceOptions {
+  1: optional i32 wait_secs;
+  2: optional i32 num_workers;
+  3: optional map<string, i32> num_executors;
+}
+
+
 service Nimbus {
   void submitTopology(1: string name, 2: string uploadedJarLocation, 3: string jsonConf, 4: StormTopology topology) throws (1: AlreadyAliveException e, 2: InvalidTopologyException ite);
   void killTopology(1: string name) throws (1: NotAliveException e);
   void killTopologyWithOpts(1: string name, 2: KillOptions options) throws (1: NotAliveException e);
+  void activate(1: string name) throws (1: NotAliveException e);
+  void deactivate(1: string name) throws (1: NotAliveException e);
+  void rebalance(1: string name, 2: RebalanceOptions options) throws (1: NotAliveException e, 2: InvalidTopologyException ite);
+
   // need to add functions for asking about status of storms, what nodes they're running on, looking at task logs
 
   string beginFileUpload();
   void uploadChunk(1: string location, 2: binary chunk);
   void finishFileUpload(1: string location);
-  
+
   string beginFileDownload(1: string file);
   //can stop downloading chunks when receive 0-length byte array back
   binary downloadChunk(1: string id);
-  
+
   // stats functions
   ClusterSummary getClusterInfo();
   TopologyInfo getTopologyInfo(1: string id) throws (1: NotAliveException e);
   //returns json
   string getTopologyConf(1: string id) throws (1: NotAliveException e);
   StormTopology getTopology(1: string id) throws (1: NotAliveException e);
+  StormTopology getUserTopology(1: string id) throws (1: NotAliveException e);
 }
 
 struct DRPCRequest {
@@ -203,6 +233,9 @@ exception DRPCExecutionException {
 
 service DistributedRPC {
   string execute(1: string functionName, 2: string funcArgs) throws (1: DRPCExecutionException e);
+}
+
+service DistributedRPCInvocations {
   void result(1: string id, 2: string result);
   DRPCRequest fetchRequest(1: string functionName);
   void failRequest(1: string id);
