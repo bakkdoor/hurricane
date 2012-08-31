@@ -1,5 +1,3 @@
-require: "storm"
-
 class GetFollowers : Storm Bolt {
   FOLLOWERS_DB = <[
     "sally" => ["bob", "tim", "alice", "adam", "jim", "chris", "jai"],
@@ -11,19 +9,15 @@ class GetFollowers : Storm Bolt {
     "john" => ["alice", "nathan", "jim", "mike", "bob"]
   ]>
 
-  output_fields: ("id", "follower")
+  input:  { id tweeter }
+  output: { id follower }
+  ack_on_success: true
 
-  def process: tuple {
-    id, tweeter = tuple
-    followers = FOLLOWERS_DB[tweeter]
-    if: followers then: {
-      followers each: |f| {
-        emit: (id, f)
+  def process {
+    if: (FOLLOWERS_DB[tweeter]) then: @{
+      each: |f| {
+        output: (id, f)
       }
     }
   }
-}
-
-if: (ARGV main?: __FILE__) then: {
-  GetFollowers new run
 }

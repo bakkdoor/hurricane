@@ -1,24 +1,20 @@
-require: "storm"
-
 class CountAggregator : Storm Bolt {
-  output_fields: ("id", "reach")
-  def initialize: @counts (<[]>) {}
+  input:  { id partial }
+  output: { id reach }
+  slots: { counts: <[]> }
+  ack_on_sucess: true
 
-  def process: tuple {
-    id, partial = tuple
-    curr = @counts[id]
-    { curr = 0 } unless: curr
+
+  def reach: id {
+    @counts at: id else_put: { 0 }
+  }
+
+  def process {
+    curr = reach: id
     @counts[id]: (curr + partial)
-    ack: tuple
   }
 
   def finished: id {
-    reach = @counts[id]
-    { reach = 0 } unless: reach
-    emit: (id, reach)
+    output: (id, reach: id)
   }
-}
-
-if: (ARGV main?: __FILE__) then: {
-  CountAggregator new run
 }

@@ -1,5 +1,3 @@
-require: "storm"
-
 class MultipleStreamSpout : Storm Spout {
   Cities =
     (("Berlin", "Germany"),
@@ -16,26 +14,13 @@ class MultipleStreamSpout : Storm Spout {
      ("Jack", 20),
      ("Cindy", 40))
 
-  output_streams: {
-    stream: {
-      fields: ('name, 'age)
-      name: 'person_stream
-    }
-    stream: {
-      fields: ('name, 'country)
-      direct: true  # optional, defaults to false
-      name: 'city_stream
-    }
+  outputs: {
+    people: { name age }
+    cities: { name country direct: true }
   }
 
-  def run {
-    loop: {
-      on: 'person_stream emit: $ People random
-      on: 'city_stream emit: $ Cities random
-    }
+  def next_tuple {
+    people: $ People random
+    cities: $ Cities random
   }
-}
-
-if: (ARGV main?: __FILE__) then: {
-  MultipleStreamSpout new run
 }

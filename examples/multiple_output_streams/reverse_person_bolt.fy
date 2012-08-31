@@ -1,13 +1,11 @@
-require: "storm"
-
 class ReversePersonBolt : Storm Bolt {
-  output_fields: ('reversed_name, 'age)
-  def process: tuple {
-    emit: (tuple[0] reverse, tuple[1])
-    ack: tuple
-  }
-}
+  input:  { name age }
+  output: { reversed_name age }
 
-if: (ARGV main?: __FILE__) then: {
-  ReversePersonBolt new run
+  ack_on_success: true
+  anchor_tuples:  true
+
+  def process {
+    output: (name reverse, age)
+  }
 }

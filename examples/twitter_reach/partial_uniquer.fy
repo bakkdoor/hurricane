@@ -1,28 +1,13 @@
-require: "storm"
+class PartialUniquer : Storm BatchBolt {
+  input:  { id follower }
+  output: { id partial_count }
+  slots: { followers: (Set new) }
 
-class PartialUniquer : Storm Bolt {
-  output_fields: ("id", "partial-count")
-  def initialize: @sets (<[]>) {}
-
-  def process: tuple {
-    id = tuple[0]
-    curr = @sets[id]
-    unless: curr do: {
-      curr = <[]>
-      @sets[id]: curr
-    }
-    curr << (tuple[1])
-    ack: tuple
+  def process {
+    @followers << follower
   }
 
-  def finished: id {
-    curr = @sets delete: id
-    count = 0
-    { count = curr size } if: curr
-    emit: (id, count)
+  def finished_batch {
+    output: (batch_id, @followers size)
   }
-}
-
-if: (ARGV main?: __FILE__) then: {
-  PartialUniquer new run
 }

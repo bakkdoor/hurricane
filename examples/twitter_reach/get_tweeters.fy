@@ -1,5 +1,3 @@
-require: "storm"
-
 class GetTweeters : Storm Bolt {
   TWEETERS_DB = <[
     "foo.com/blog/1" => ["sally", "bob", "tim", "george", "nathan"],
@@ -7,19 +5,16 @@ class GetTweeters : Storm Bolt {
     "tech.backtype.com/blog/123" => ["tim", "mike", "john"]
   ]>
 
-  output_fields: ("id", "tweeter")
+  input:  { id url }
+  output: { id tweeter }
+  ack_on_success: true
 
-  def process: tuple {
-    id, url = tuple
-    tweeters = TWEETERS_DB[url]
-    if: tweeters then: {
-      tweeters each: |t| {
-        emit: (id, t)
+  def process {
+    tweeters =
+    if: (TWEETERS_DB[url]) then: @{
+      each: |t| {
+        output: (id, t)
       }
     }
   }
-}
-
-if: (ARGV main?: __FILE__) then: {
-  GetTweeters new run
 }

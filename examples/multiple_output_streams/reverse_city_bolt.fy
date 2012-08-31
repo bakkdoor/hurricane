@@ -1,13 +1,11 @@
-require: "storm"
-
 class ReverseCityBolt : Storm Bolt {
-  output_field: 'reversed_name # just 1 output field
-  def process: tuple {
-    emit: [tuple[0] reverse]
+  input:  { name }
+  output: { reversed_name } # just 1 output field
+
+  ack_on_success: true
+  anchor_tuples:  true
+
+  def process {
+    output: $ name reverse
   }
-}
-
-
-if: (ARGV main?: __FILE__) then: {
-  ReverseCityBolt new run
 }
