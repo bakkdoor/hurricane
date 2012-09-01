@@ -9,7 +9,7 @@ require: "partial_uniquer"
 require: "count_aggregator"
 
 class Reach : Storm LinearDRPCTopology {
-  GetTweeters --> shuffle --> GetFollowers --> { id follower } --> PartialUniquer --> { id } --> CountAggregator
+  GetTweeters -- shuffle --> GetFollowers -- { id follower } --> PartialUniquer -- { id } --> CountAggregator
 
   GetTweeters     * 3
   GetFollowers    * 12
