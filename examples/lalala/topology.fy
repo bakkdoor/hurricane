@@ -3,7 +3,7 @@ require: "lalala"
 
 class LalalaTopology : Storm Topology {
   setup: {
-    RandomWords --> { name } ---> Lalala
+    RandomWords --> { name } --> Lalala
 
     RandomWords setup: @{ names: ["chris", "mike", "nathan"] }
 
