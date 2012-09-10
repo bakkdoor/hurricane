@@ -6,6 +6,8 @@ class Storm {
     """
 
     class ClassMethods {
+      read_slot: 'output_streams
+
       def output: output_fields {
         @output_streams = <[
           'default => stream: (output_fields to_a) name: 'default
