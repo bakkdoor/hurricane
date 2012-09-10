@@ -1,3 +1,7 @@
+class Storm {
+  class Topology
+}
+
 require: "topology/component_def"
 require: "topology/bolt_def"
 require: "topology/spout_def"

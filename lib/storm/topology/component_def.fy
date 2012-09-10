@@ -1,19 +1,15 @@
-class Storm {
-  class Topology {
-    class ComponentDef {
-      @@component_ids = 0
+class Storm Topology {
+  class ComponentDef {
+    read_write_slots: ('topology, 'parallelism)
 
-      def ComponentDef next_id {
-        @@component_ids = @@component_ids + 1
-        @@component_ids
-      }
+    def initialize
+    def initialize: block {
+      initialize
+      block call: [self]
+    }
 
-      read_write_slots: ('id, 'parallelism)
-
-      def initialize: @topology {
-        @parallelism = 1
-        @id = ComponentDef next_id
-      }
+    def to_thrift {
+      "Not implemented" raise!
     }
   }
 }
