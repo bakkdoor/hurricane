@@ -7,6 +7,7 @@ class Storm {
 
     provides_interface: 'each:
     include: Fancy Enumerable
+    include: Protocol
 
     read_write_slots: ('id, 'component, 'stream, 'task, 'values)
 
@@ -26,6 +27,11 @@ class Storm {
 
     def each: block {
       @values each: block
+    }
+
+    def ack! {
+      { ack: self } unless: @acked?
+      @acked? = true
     }
   }
 }
