@@ -89,12 +89,11 @@ class Storm {
     include: Storm Protocol
     extend:  ClassMethods
 
-    read_slots: ('fields, 'streams)
-
     def initialize {
-      @fields = Set new
-      @slots = []
       Component do_setup: self
     }
+
+    def parallelism { class parallelism }
+    def output_streams { class output_streams }
   }
 }

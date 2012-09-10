@@ -1,7 +1,7 @@
 class Storm {
   class Cluster {
     def submit_topology: topology_class with_config: conf (nil) {
-      top = topology_class setup_instance
+      top = topology_class new
       if: *storm_definition* then: {
         "Submitting topology: #{topology_class} to cluster: #{self}" println
         submit_thrift_topology: top with_config: conf

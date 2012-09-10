@@ -7,14 +7,15 @@ class Storm {
         name snake_cased
       }
 
-      def setup_instance {
-        top = new
+      def new {
+        topology = allocate()
+        topology initialize
         if: @setup_block then: {
-          let: '*storm_topology* be: top in: {
-            top do: @setup_block
+          let: '*storm_topology* be: topology in: {
+            topology do: @setup_block
           }
         }
-        top
+        topology
       }
 
       def shuffle {
@@ -29,11 +30,11 @@ class Storm {
     }
 
     def bolts {
-      @components values grep: Storm Bolt
+      @components values select: @{ is_a?: Storm Bolt }
     }
 
     def spouts {
-      @components values grep: Storm Spout
+      @components values select: @{ is_a?: Storm Spout }
     }
 
     def component: name {

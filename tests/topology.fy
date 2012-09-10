@@ -62,7 +62,7 @@ FancySpec describe: Storm Topology with: {
         MultipleOutputStreamsSpout -- { stream1: { f2 } stream2: { f3 f5 } } --> Bolt2
 
 
-        Spout1 * 5
+        Spout1 * 1
         Spout2 * 5
         MultipleOutputStreamsSpout * 2
         Bolt1 * 2
@@ -78,7 +78,7 @@ FancySpec describe: Storm Topology with: {
 
       Spout1 parallelism is: 1
       Spout2 parallelism is: 5
-      MultipleOutputStreamsSpout parallelism is: 1
+      MultipleOutputStreamsSpout parallelism is: 2
 
       MultipleOutputStreamsSpout output_streams size is: 2
 
