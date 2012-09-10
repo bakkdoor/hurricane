@@ -1,8 +1,9 @@
 class Storm {
   class Cluster {
-    def submit_topology: top with_config: conf (nil) {
+    def submit_topology: topology_class with_config: conf (nil) {
+      top = topology_class setup_instance
       if: *storm_definition* then: {
-        "Submitting topology: #{top} to cluster: #{self}" println
+        "Submitting topology: #{topology_class} to cluster: #{self}" println
         submit_thrift_topology: top with_config: conf
       } else: {
         with_component: @{ run } in: top
@@ -10,7 +11,7 @@ class Storm {
     }
 
     def with_component: block in: topology {
-      _, component_name = ARGV
+      _, _, component_name = ARGV
 
       unless: component_name do: {
         System abort: "No component name given. Aborting."

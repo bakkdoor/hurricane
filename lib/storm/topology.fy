@@ -10,6 +10,23 @@ class Storm {
       name snake_cased
     }
 
+    def self setup_instance {
+      top = new
+      if: @setup_block then: {
+        @setup_block call: [top]
+      }
+      top
+    }
+
+    def initialize {
+      @components = <[]>
+    }
+
+
+    def component: name {
+      @components[name]
+    }
+
     def name {
       class topology_name
     }

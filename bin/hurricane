@@ -2,11 +2,14 @@
 
 require: "../lib/storm"
 
-topology_file = ARGV[1]
+topology_file  = ARGV[1]
+component_name = ARGV[2]
 
 if: topology_file then: {
-  Storm in_definition: {
+  if: component_name then: {
     require: topology_file
+  } else: {
+    Storm in_definition: { require: topology_file }
   }
 } else: {
   System abort: "No file given. Aborting."
