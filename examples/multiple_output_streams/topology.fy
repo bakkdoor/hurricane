@@ -3,12 +3,16 @@ require: "reverse_person_bolt"
 require: "reverse_city_bolt"
 
 class PeopleAndCities : Storm Topology {
-  MultipleStreamSpout -- [
-    { city_stream: { name } } --> ReverseCityBolt,
-    { person_stream: {} }     --> ReversePersonBolt
-  ]
+  setup: {
+    MultipleStreamSpout -- [
+      { city_stream: { name } } --> ReverseCityBolt,
+      { person_stream: {} }     --> ReversePersonBolt
+    ]
 
-  MultipleStreamSpout * 10
-  ReverseCityBolt     * 3
-  ReversePersonBolt   * 3
+    MultipleStreamSpout * 10
+    ReverseCityBolt     * 3
+    ReversePersonBolt   * 3
+  }
 }
+
+Storm submit_topology: PeopleAndCities

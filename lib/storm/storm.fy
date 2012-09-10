@@ -15,4 +15,8 @@ class Storm {
   def Storm in_definition: block {
     let: '*storm_definition* be: true in: block
   }
+
+  def Storm submit_topology: topology {
+    remote_cluster submit_topology: topology
+  }
 }
