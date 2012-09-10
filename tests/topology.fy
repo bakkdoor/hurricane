@@ -70,20 +70,20 @@ FancySpec describe: Storm Topology with: {
       }
     }
 
-    Topology3 new do: @{
-      bolts empty? is: false
-      spouts empty? is: false
-      bolts size is: 2
-      spouts size is: 3
+    Topology3 new do: |t| {
+      t bolts empty? is: false
+      t spouts empty? is: false
+      t bolts size is: 2
+      t spouts size is: 3
 
-      s1 parallelism is: 1
-      s2 parallelism is: 5
-      s3 parallelism is: 1
+      Spout1 parallelism is: 1
+      Spout2 parallelism is: 5
+      MultipleOutputStreamsSpout parallelism is: 1
 
-      s3 spout output_streams size is: 2
+      MultipleOutputStreamsSpout output_streams size is: 2
 
-      b1 parallelism is: 2
-      b2 parallelism is: 10
+      Bolt1 parallelism is: 2
+      Bolt2 parallelism is: 10
     }
   }
 }

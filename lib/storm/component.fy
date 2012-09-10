@@ -44,9 +44,18 @@ class Storm {
         }
       }
 
-      def * parallelism_hint {
-        @parallelism_hint = parallelism_hint
+      def in_topology: block ({}) {
+        *storm_topology* add_component: self
+        block call
       }
+
+      def * parallelism_hint {
+        in_topology: {
+          @parallelism = parallelism_hint
+        }
+      }
+
+      def parallelism { @parallelism }
 
       def [name] {
         dup tap: @{
@@ -62,15 +71,16 @@ class Storm {
 
       def --> component {
         # TODO
-        *storm_topology* add_component: self
-        *storm_topology* add_component: component
-        component
+        in_topology: {
+          component
+        }
       }
 
       def -- grouping {
         # TODO
-        *storm_topology* add_component: self
-        self
+        in_topology: {
+          self
+        }
       }
     }
 
