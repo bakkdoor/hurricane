@@ -1,9 +1,12 @@
 require: "mocks"
 
 class TestBolt : Storm Bolt {
-  def process: tuple {
-    emit: $ [tuple values join: ", "]
-    ack: tuple
+  output: { comma_seperated }
+  ack: true
+  def process {
+    default: $ @tuple join: ", "
+    # emit: $ [@tuple join: ", "]
+    # ack: @tuple
   }
 }
 
@@ -36,10 +39,10 @@ FancySpec describe: Storm Bolt with: {
 
     @out sent select: |m| {
       m includes?: $ tup1['tuple] join: ", "
-    } size is == 1
+    } size is: 1
 
     @out sent select: |m| {
       m includes?: $ tup2['tuple] join: ", "
-    } size is == 1
+    } size is: 1
   }
 }

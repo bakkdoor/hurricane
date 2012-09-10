@@ -11,7 +11,9 @@ FancySpec describe: Storm Topology with: {
   }
 
   it: "creates a topology with 1 spout" when: {
-    class MySpout : Storm Spout
+    class MySpout : Storm Spout {
+      output: { test }
+    }
     class Topology1 : Storm Topology {
       setup: {
         MySpout * 10
@@ -27,7 +29,9 @@ FancySpec describe: Storm Topology with: {
   }
 
   it: "creates a topology with 2 bolt" when: {
-    class MyBolt : Storm Bolt
+    class MyBolt : Storm Bolt {
+      output: { bla }
+    }
     class Topology2 : Storm Topology {
       setup: {
         MyBolt * 2
@@ -49,10 +53,10 @@ FancySpec describe: Storm Topology with: {
         stream2: { f3 f4 f5 }
       }
     }
-    class Spout1 : Storm Spout
-    class Spout2 : Storm Spout
-    class Bolt1 : Storm Bolt
-    class Bolt2 : Storm Bolt
+    class Spout1 : Storm Spout { output: { test } }
+    class Spout2 : Storm Spout { output: { test } }
+    class Bolt1 : Storm Bolt   { output: { test } }
+    class Bolt2 : Storm Bolt   { output: { test } }
 
     class Topology3 : Storm Topology {
       setup: {
