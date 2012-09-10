@@ -5,9 +5,7 @@ class Storm {
         "Submitting topology: #{top} to cluster: #{self}" println
         submit_thrift_topology: top with_config: conf
       } else: {
-        with_component: |component| {
-          component run
-        } in: top
+        with_component: @{ run } in: top
       }
     }
 
