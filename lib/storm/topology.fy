@@ -14,7 +14,9 @@ class Storm {
       def setup_instance {
         top = new
         if: @setup_block then: {
-          let: '*storm_topology* be: top in: @setup_block
+          let: '*storm_topology* be: top in: {
+            top do: @setup_block
+          }
         }
         top
       }
