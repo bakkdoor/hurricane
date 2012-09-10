@@ -11,10 +11,10 @@ FancySpec describe: Storm Topology with: {
   }
 
   it: "creates a topology with 1 spout" when: {
-    class Spout1 : Storm Spout
+    class MySpout : Storm Spout
     class Topology1 : Storm Topology {
       setup: {
-        Spout1 * 10
+        MySpout * 10
       }
     }
 
@@ -27,10 +27,10 @@ FancySpec describe: Storm Topology with: {
   }
 
   it: "creates a topology with 2 bolt" when: {
-    class Bolt2 : Storm Bolt
+    class MyBolt : Storm Bolt
     class Topology2 : Storm Topology {
       setup: {
-        Bolt2 * 2
+        MyBolt * 2
       }
     }
 
@@ -72,6 +72,7 @@ FancySpec describe: Storm Topology with: {
     Topology3 new do: |t| {
       t bolts empty? is: false
       t spouts empty? is: false
+
       t bolts size is: 2
       t spouts size is: 3
 

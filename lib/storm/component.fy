@@ -46,54 +46,56 @@ class Storm {
         }
       }
 
-      def in_topology: block ({}) {
-        *storm_topology* add_component: self
-        block call
+      def default_instance {
+        { @default_instance = new } unless: @default_instance
+        @default_instance
       }
 
       def * parallelism_hint {
-        in_topology: {
-          @parallelism = parallelism_hint
-        }
+        default_instance parallelism: parallelism_hint
       }
 
-      def parallelism { @parallelism }
-
-      def [name] {
-        dup tap: @{
-          extend: ClassMethods
-          component_name: "#{component_name}:#{name}"
-        }
+      def parallelism {
+        default_instance parallelism
       }
 
-      def component_name: @component_name
-      def component_name {
-        @component_name || name
+      def [component_name] {
+        new: "#{name}:#{component_name}"
       }
 
       def --> component {
-        # TODO
-        in_topology: {
-          component
-        }
+        default_instance --> component
       }
 
       def -- grouping {
-        # TODO
-        in_topology: {
-          self
-        }
+        default_instance -- grouping
       }
     }
 
     include: Storm Protocol
     extend:  ClassMethods
 
-    def initialize {
+    read_write_slots: ('parallelism, 'component_name)
+
+    def initialize: @component_name (nil) {
+      { @component_name = class name } unless: @component_name
+      @parallelism = 1
       Component do_setup: self
+      { *storm_topology* add_component: self } if: *storm_topology*
     }
 
-    def parallelism { class parallelism }
-    def output_streams { class output_streams }
+    def output_streams {
+      class output_streams
+    }
+
+    def --> component {
+      # TODO
+      component
+    }
+
+    def -- grouping {
+      # TODO
+      self
+    }
   }
 }
