@@ -5,6 +5,8 @@ class Storm {
     A component is anything that can send and receive @Storm::Tuple@s via streams in realtime.
     """
 
+    class MissingOutputStreamsError : StandardError
+
     class ClassMethods {
       read_slot: 'output_streams
 
@@ -58,6 +60,7 @@ class Storm {
         if: @setup_block then: @{
           call: [component]
         }
+        { MissingOutputStreamsError raise: "No output streams or fields defined in: #{name}!" } unless: @output_streams
       }
 
       def default_instance {
