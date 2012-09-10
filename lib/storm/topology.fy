@@ -47,6 +47,10 @@ class Storm {
       }
     }
 
+    def components {
+      @components dup
+    }
+
     def name {
       class topology_name
     }

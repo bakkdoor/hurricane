@@ -74,6 +74,13 @@ FancySpec describe: Storm Topology with: {
       spouts empty? is: false
       bolts size is: 2
       spouts size is: 3
+      components is: <[
+        "Spout1" => Spout1 default_instance,
+        "Spout2" => Spout2 default_instance,
+        "MultipleOutputStreamsSpout" => MultipleOutputStreamsSpout default_instance,
+        "Bolt1" => Bolt1 default_instance,
+        "Bolt2" => Bolt2 default_instance
+      ]>
     }
 
     Spout1 parallelism is: 1
