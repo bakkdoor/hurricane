@@ -23,7 +23,7 @@ class MockedIO {
 
   def readline {
     if: (@in empty?) then: {
-      "No input left" raise!
+      "EOF" raise!
     }
     @in shift
   }

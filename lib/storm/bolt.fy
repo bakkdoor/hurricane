@@ -68,9 +68,13 @@ class Storm {
         }
       } catch Exception => e {
         log: e
-        bt = e backtrace join: "\n"
-        msg = "ERROR: '#{e message}':\n======================\n#{bt}\n======================"
-        *stderr* println: msg
+        match e message {
+          case "EOF" -> nil # ignore
+          case _ ->
+            bt = e backtrace join: "\n"
+            msg = "ERROR: '#{e message}':\n======================\n#{bt}\n======================"
+            *stderr* println: msg
+        }
       }
     }
   }
