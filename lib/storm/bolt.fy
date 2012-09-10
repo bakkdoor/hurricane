@@ -46,9 +46,9 @@ class Storm {
     def process: @tuple {
       try {
         process
-        { @tuple ack! } if: ack_on_success?
+        { @tuple ack! } if: (class ack_on_success?)
       } finally {
-        { @tuple ack! } if: always_ack?
+        { @tuple ack! } if: (class always_ack?)
       }
     }
 
@@ -68,6 +68,9 @@ class Storm {
         }
       } catch Exception => e {
         log: e
+        bt = e backtrace join: "\n"
+        msg = "======================\n#{bt}\n======================"
+        *stderr* println: msg
       }
     }
   }
