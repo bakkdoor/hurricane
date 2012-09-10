@@ -30,6 +30,12 @@ class Storm {
       @components[name]
     }
 
+    def add_component: comp with_name: name {
+      unless: (@components includes?: name) do: {
+        @components[name]: comp
+      }
+    }
+
     def name {
       class topology_name
     }

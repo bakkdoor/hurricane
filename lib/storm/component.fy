@@ -48,6 +48,17 @@ class Storm {
         @parallelism_hint = parallelism_hint
       }
 
+      def [name] {
+        dup tap: @{
+          component_name: name
+        }
+      }
+
+      def component_name: @component_name
+      def component_name {
+        @component_name || name
+      }
+
       def --> component {
         # TODO
         component
