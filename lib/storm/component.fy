@@ -37,7 +37,6 @@ class Storm {
       }
 
       def setup: @setup_block
-      def setup_block { @setup_block }
 
       def do_setup: component {
         if: @setup_block then: @{
