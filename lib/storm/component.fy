@@ -50,7 +50,8 @@ class Storm {
 
       def [name] {
         dup tap: @{
-          component_name: name
+          extend: ClassMethods
+          component_name: "#{component_name}:#{name}"
         }
       }
 
@@ -61,11 +62,14 @@ class Storm {
 
       def --> component {
         # TODO
+        *storm_topology* add_component: self
+        *storm_topology* add_component: component
         component
       }
 
       def -- grouping {
         # TODO
+        *storm_topology* add_component: self
         self
       }
     }
