@@ -4,24 +4,27 @@ require: "topology/spout_def"
 
 class Storm {
   class Topology {
-    def self setup: @setup_block
+    class ClassMethods {
+      def setup: @setup_block
 
-    def self topology_name {
-      name snake_cased
-    }
-
-    def self setup_instance {
-      top = new
-      if: @setup_block then: {
-        let: '*storm_topology* be: top in: @setup_block
+      def topology_name {
+        name snake_cased
       }
-      top
+
+      def setup_instance {
+        top = new
+        if: @setup_block then: {
+          let: '*storm_topology* be: top in: @setup_block
+        }
+        top
+      }
     }
+
+    extend: ClassMethods
 
     def initialize {
       @components = <[]>
     }
-
 
     def component: name {
       @components[name]

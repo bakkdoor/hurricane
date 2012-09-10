@@ -50,6 +50,12 @@ class Storm {
 
       def --> component {
         # TODO
+        component
+      }
+
+      def -- grouping {
+        # TODO
+        self
       }
     }
 
