@@ -30,7 +30,7 @@ class Storm {
           @output_streams each_key: |name| {
             class_eval: """
             def #{name}: tuple_out {
-              @streams[#{name inspect}] <- (tuple_out anchor: @tuple)
+              @output_streams[#{name inspect}] <- (tuple_out anchor: @tuple)
             }
             """
           }

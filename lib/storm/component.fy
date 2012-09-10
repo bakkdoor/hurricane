@@ -12,12 +12,16 @@ class Storm {
         @output_streams = <[
           'default => stream: (output_fields to_a) name: 'default
         ]>
+
+        define_output_methods
       }
 
       def outputs: output_streams {
         @output_streams = output_streams to_hash map: |name stream_info| {
           (name, stream: (stream_info to_a) name: name)
         } to_hash
+
+        define_output_methods
       }
 
       private: {
@@ -30,6 +34,16 @@ class Storm {
             name:    name
             fields:  fields
             options: options
+          }
+        }
+
+        def define_output_methods {
+          @output_streams each: |name val| {
+            class_eval: """
+            def #{name}: tuple_out {
+              @output_streams[#{name inspect}] <- tuple_out
+            }
+            """
           }
         }
       }
