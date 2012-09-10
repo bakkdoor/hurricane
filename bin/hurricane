@@ -12,5 +12,5 @@ if: topology_file then: {
     Storm in_definition: { require: topology_file }
   }
 } else: {
-  System abort: "No file given. Aborting."
+  System abort: "Usage: #{ARGV[0]} [topology_file] [component_name]"
 }
