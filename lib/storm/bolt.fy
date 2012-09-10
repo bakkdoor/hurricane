@@ -20,6 +20,11 @@ class Storm {
         @ack_on_success true?
       }
 
+      def ack: @always_ack
+      def always_ack? {
+        @always_ack true?
+      }
+
       def anchor_tuples: @anchor_tuples {
         if: anchor_tuples? then: {
           @output_streams each_key: |name| {
@@ -42,7 +47,9 @@ class Storm {
       try {
         process
         { @tuple ack! } if: ack_on_success?
-      } catch {}
+      } finally {
+        { @tuple ack! } if: always_ack?
+      }
     }
 
     def run {
