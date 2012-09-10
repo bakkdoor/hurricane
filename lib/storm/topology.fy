@@ -18,6 +18,10 @@ class Storm {
         }
         top
       }
+
+      def shuffle {
+        ShuffleGrouping new
+      }
     }
 
     extend: ClassMethods
