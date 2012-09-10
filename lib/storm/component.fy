@@ -43,7 +43,7 @@ class Storm {
           @output_streams each: |name val| {
             class_eval: """
             def #{name}: tuple_out {
-              @output_streams[#{name inspect}] <- tuple_out
+              class output_streams[#{name inspect}] <- tuple_out
             }
             """
           }
