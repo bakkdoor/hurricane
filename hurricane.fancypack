@@ -1,4 +1,4 @@
-Fancy Package Specification new: "stormify" with: {
+Fancy Package Specification new: "hurricane" with: {
   author: "Christopher Bertels"
   email: "chris@fancy-lang.org"
   include_files: ["lib/storm.fy"]
