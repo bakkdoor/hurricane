@@ -38,7 +38,7 @@ class Storm {
 
     def add_component: comp with_name: name (comp component_name) {
       unless: (@components includes?: name) do: {
-        @components[name]: comp
+        @components[name]: (comp new)
       }
     }
 
