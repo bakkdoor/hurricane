@@ -1,12 +1,4 @@
 class Storm {
-  class Topology
-}
-
-require: "topology/component_def"
-require: "topology/bolt_def"
-require: "topology/spout_def"
-
-class Storm {
   class Topology {
     class ClassMethods {
       def setup: @setup_block
@@ -34,6 +26,14 @@ class Storm {
 
     def initialize {
       @components = <[]>
+    }
+
+    def bolts {
+      @components values grep: Storm Bolt
+    }
+
+    def spouts {
+      @components values grep: Storm Spout
     }
 
     def component: name {

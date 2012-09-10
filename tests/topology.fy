@@ -2,90 +2,88 @@ require: "../lib/storm"
 
 FancySpec describe: Storm Topology with: {
   it: "creates an empty topology" when: {
-    t = Storm Topology new: "test" with: {}
-    t bolts empty? is: true
-    t spouts empty? is: true
-    t name is: "test"
+    class TestTop : Storm Topology
+    TestTop new do: @{
+      bolts empty? is: true
+      spouts empty? is: true
+      name is: "test_top"
+    }
   }
 
   it: "creates a topology with 1 spout" when: {
-    t = Storm Topology new: "test1" with: {
-      spout: {
-        parallelism: 10
-        Storm Spout new
+    class Spout1 : Storm Spout
+    class Topology1 : Storm Topology {
+      setup: {
+        Spout1 * 10
       }
     }
-    t bolts empty? is: true
-    t spouts empty? is: false
-    t spouts size is: 1
-    t spouts first parallelism is: 10
+
+    Topology1 new do: @{
+      bolts empty? is: true
+      spouts empty? is: false
+      spouts size is: 1
+      spouts first parallelism is: 10
+    }
   }
 
   it: "creates a topology with 2 bolt" when: {
-    t = Storm Topology new: "test2" with: {
-      bolt: {
-        parallelism: 2
-        Storm Bolt new
+    class Bolt2 : Storm Bolt
+    class Topology2 : Storm Topology {
+      setup: {
+        Bolt2 * 2
       }
     }
-    t bolts empty? is: false
-    t spouts empty? is: true
-    t bolts size is: 1
-    t bolts first parallelism is: 2
+
+    Topology2 new do: @{
+      bolts empty? is: false
+      spouts empty? is: true
+      bolts size is: 1
+      bolts first parallelism is: 2
+    }
   }
 
   it: "creates a topology with multiple bolts and spouts" when: {
     class MultipleOutputStreamsSpout : Storm Spout {
-      output_streams: {
-        stream: {
-          fields: ["f1", "f2"]
-          direct: true
-          name: 'stream1
-        }
-        stream: {
-          fields: ["f3", "f4", "f5"]
-          name: 'stream2
-        }
+      outputs: {
+        stream1: { f1 f2 direct: true }
+        stream2: { f3 f4 f5 }
+      }
+    }
+    class Spout1 : Storm Spout
+    class Spout2 : Storm Spout
+    class Bolt1 : Storm Bolt
+    class Bolt2 : Storm Bolt
+
+    class Topology3 : Storm Topology {
+      setup: {
+        Spout1 -- { field1 field2 } --> Bolt1
+        Spout2 -- { field3 } --> Bolt1
+
+        MultipleOutputStreamsSpout -- { stream1: { f2 } stream2: { f3 f5 } } --> Bolt2
+
+
+        Spout1 * 5
+        Spout2 * 5
+        MultipleOutputStreamsSpout * 2
+        Bolt1 * 2
+        Bolt2 * 10
       }
     }
 
-    t = Storm Topology new: "test3" with: {
-      @s1 = spout: {
-        Storm Spout
-      }
-      @s2 = spout: {
-        parallelism: 5
-        Storm Spout
-      }
-      @s3 = spout: {
-        MultipleOutputStreamsSpout
-      }
+    Topology3 new do: @{
+      bolts empty? is: false
+      spouts empty? is: false
+      bolts size is: 2
+      spouts size is: 3
 
-      @b1 = bolt: {
-        parallelism: 2
-        groups_on_fields: ["field1", "field2"] from: @s1
-        groups_on_fields: ["field3"] from: @s2
-        Storm Bolt new
-      }
+      s1 parallelism is: 1
+      s2 parallelism is: 5
+      s3 parallelism is: 1
 
-      @b2 = bolt: {
-        parallelism: 10
-        subscribes_to: 'stream1 grouped_on: ["f2"] from: @s3
-        subscribes_to: 'stream2 grouped_on: ["f3", "f5"] from: @s3
-      }
+      s3 spout output_streams size is: 2
+
+      b1 parallelism is: 2
+      b2 parallelism is: 10
     }
-    t bolts empty? is: false
-    t spouts empty? is: false
-    t bolts size is: 2
-    t spouts size is: 3
-
-    t s1 parallelism is: 1
-    t s2 parallelism is: 5
-    t s3 parallelism is: 1
-
-    t s3 spout output_streams size is: 2
-
-    t b1 parallelism is: 2
-    t b2 parallelism is: 10
   }
 }
