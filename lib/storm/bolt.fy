@@ -80,9 +80,15 @@ class Storm {
   }
 
   class BlockBolt : Bolt {
+    output: { value }
+    anchor_tuples: true
     def initialize: @block
-    def --> component {
-
+    def output: tuple {
+      emit: tuple
+    }
+    def process: tuple {
+      output: $ @block call: (tuple values)
+      tuple ack!
     }
   }
 }

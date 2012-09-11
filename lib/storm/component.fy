@@ -12,7 +12,7 @@ class Storm {
 
       def output: output_fields {
         @output_streams = <[
-          'default => stream: (output_fields to_a) name: 'default
+          'output => stream: (output_fields to_a) name: 'output
         ]>
 
         define_output_methods
