@@ -97,8 +97,12 @@ class Storm {
     def initialize: @component_name (nil) {
       { @component_name = class name } unless: @component_name
       @parallelism = 1
-      class do_setup: self
       { *storm_topology* add_component: self } if: *storm_topology*
+      setup
+    }
+
+    def setup {
+      class do_setup: self
     }
 
     def output_streams {

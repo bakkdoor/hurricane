@@ -13,6 +13,7 @@ class Storm {
     }
 
     def run {
+      setup
       conf, context = handshake
       open: conf context: context
 

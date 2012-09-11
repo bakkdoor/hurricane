@@ -66,6 +66,7 @@ class Storm {
       and possibly emit new messages (@Storm Tuple@s).
       """
 
+      setup
       conf, context = handshake
       prepare: conf context: context
 

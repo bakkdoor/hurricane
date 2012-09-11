@@ -3,6 +3,6 @@ class RandomWords : Storm Spout {
   slots:  { words }
 
   def next_tuple {
-    emit: $ @words random
+    output: $ @words random
   }
 }
