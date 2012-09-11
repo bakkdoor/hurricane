@@ -5,8 +5,6 @@ class TestBolt : Storm Bolt {
   ack: true
   def process {
     output: $ @tuple join: ", "
-    # emit: $ [@tuple join: ", "]
-    # ack: @tuple
   }
 }
 
