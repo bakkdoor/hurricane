@@ -41,11 +41,15 @@ class Storm {
 
         def define_output_methods {
           @output_streams each: |name val| {
-            class_eval: """
-            def #{name}: tuple_out {
-              emit: tuple_out with: <['stream => #{name inspect}]>
+            match name {
+              case 'output -> nil # ignore (defined below)
+              case _ ->
+                class_eval: """
+                def #{name}: tuple {
+                  emit: tuple with: <['stream => #{name inspect}]>
+                }
+                """
             }
-            """
           }
         }
       }
@@ -117,6 +121,10 @@ class Storm {
     def -- grouping {
       # TODO
       self
+    }
+
+    def output: tuple {
+      emit: tuple
     }
   }
 }
