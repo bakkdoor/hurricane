@@ -51,7 +51,7 @@ class Storm {
       }
 
       def slots: slots {
-        @slots = @slots to_a
+        read_write_slots: $ slots to_a
       }
 
       def setup: @setup_block

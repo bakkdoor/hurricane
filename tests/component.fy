@@ -33,4 +33,23 @@ FancySpec describe: Storm Component with: {
     }
     { NoStreamsBolt new } does_not raise: Storm Component MissingOutputStreamsError
   }
+
+  it: "sets up the component's slots on initialization" when: {
+    class MySlotBolt : Storm Bolt {
+      slots: { words name }
+      output: { word name }
+      def process {
+        output: (@words random, @name + "-foo")
+      }
+    }
+
+    MySlotBolt setup: @{
+      words: ["Hello", "World", "How", "Are", "You?"]
+      name: "CrazyBolt"
+    }
+
+    b = MySlotBolt new
+    b words is: ["Hello", "World", "How", "Are", "You?"]
+    b name is: "CrazyBolt"
+  }
 }

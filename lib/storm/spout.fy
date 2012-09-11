@@ -8,6 +8,10 @@ class Storm {
 
     def fail: id
 
+    def emit: tuple with: options (<[]>) {
+      emit_spout: tuple with: options
+    }
+
     def run {
       conf, context = handshake
       open: conf context: context

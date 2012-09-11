@@ -5,7 +5,7 @@ class LalalaTopology : Storm Topology {
   setup: {
     RandomWords -- { name } --> Lalala
 
-    RandomWords setup: @{ names: ["chris", "mike", "nathan"] }
+    RandomWords setup: @{ words: ["chris", "mike", "nathan"] }
 
     RandomWords * 3
     Lalala      * 3
