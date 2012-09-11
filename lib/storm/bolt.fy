@@ -43,6 +43,14 @@ class Storm {
 
     extend: ClassMethods
 
+    def prepare: conf context: context
+
+    def emit: tuple with: options (<[]>) {
+      emit_bolt: tuple with: options
+    }
+
+    def process
+
     def process: @tuple {
       try {
         process
@@ -58,22 +66,22 @@ class Storm {
       and possibly emit new messages (@Storm Tuple@s).
       """
 
-      heartbeat_dir = read_string_message
-      send_pid: heartbeat_dir
-      @conf, @context = read_env
+      conf, context = handshake
+      prepare: conf context: context
+
       try {
         loop: {
           process: $ Tuple from_hash: read_message
-          sync
         }
       } catch Exception => e {
-        log: e
-        match e message {
+        msg = e message
+        match msg {
           case "EOF" -> nil # ignore
           case _ ->
-            bt = e backtrace join: "\n"
-            msg = "ERROR: '#{e message}':\n======================\n#{bt}\n======================"
-            *stderr* println: msg
+            bt  = e backtrace join: "\n"
+            log: "Exception in bolt #{class name} : #{msg} - #{bt}"
+            error_msg = "ERROR: '#{msg}':\n======================\n#{bt}\n======================"
+            *stderr* println: error_msg
         }
       }
     }

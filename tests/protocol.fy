@@ -30,19 +30,14 @@ FancySpec describe: Storm Protocol with: {
   it: "sends the pid to the parent process" for: 'send_pid: when: {
     @storm send_pid: "/tmp/"
     pid = Process pid()
-    @out sent is == ["#{pid}\n"]
+    cmd = <['pid => pid]>
+    @out sent is == ["#{cmd to_json()}\n", "end\n"]
   }
 
   it: "syncs with the parent process" for: 'sync when: {
     @storm sync
-    @out sent is == ["sync\n"]
-  }
-
-  it: "emits a tuple to storm" for: 'emit_tuple:stream:anchors:direct: when: {
-    tuple_values = ["hello", "world"]
-    @storm emit_tuple: tuple_values
-    emit_msg = JSON parse(@out sent[-2]) # last one is "end"
-    emit_msg is == <["command" => "emit", "anchors" => [], "tuple" => tuple_values]>
+    cmd = <['command => 'sync]>
+    @out sent is == ["#{cmd to_json()}\n", "end\n"]
   }
 
   it: "acks a tuple" for: 'ack: when: {
