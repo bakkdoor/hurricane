@@ -1,5 +1,10 @@
 class Storm {
   class Grouping {
+    """
+    Describes a general stream grouping / subscription relationship
+    between 2 components within a Storm Topology.
+    """
+
     class ClassMethods {
       lazy_slot: 'groupings value: { <[]> }
 
