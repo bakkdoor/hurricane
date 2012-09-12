@@ -113,14 +113,19 @@ class Storm {
       class output_streams
     }
 
+    def groupings {
+      Grouping[self]
+    }
+
     def --> component {
-      # TODO
+      Grouping[self] << (NoneGrouping new: self to: component)
       component
     }
 
     def -- grouping {
-      # TODO
-      self
+      grouping = Grouping parse: grouping sender: self
+      Grouping[self] << grouping
+      grouping
     }
 
     def output: tuple {
