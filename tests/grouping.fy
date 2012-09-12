@@ -26,11 +26,12 @@ FancySpec describe: Grouping with: {
       output: { a b c }
     }
 
+    Storm Topology Definition new do:
     {
       MySpout[0] -- none --> (MyBolt[0])
       MySpout[0] -- shuffle --> (MyBolt[1])
       MySpout[1] -- { a b } --> (MyBolt[0])
-    } call_with_receiver: $ Storm Topology Definition new
+    }
 
     groupings = Grouping[MySpout[0]]
     groupings size is: 2
