@@ -8,10 +8,12 @@ class Storm {
       }
 
       def parse: grouping_data sender: sender (nil) receiver: receiver (nil) {
+        if: (grouping_data is_a?: Grouping) then: {
+          return grouping_data tap: @{ sender: sender; receiver: receiver }
+        }
+
         fields_arr = grouping_data to_a
         match fields_arr {
-          case ['shuffle] -> ShuffleGrouping new: sender to: receiver
-          case ['none] -> NoneGrouping new: sender to: receiver
           case _ ->
             if: (fields_arr first is_a?: Array) then: {
               hash = grouping_data to_hash

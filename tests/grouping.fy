@@ -12,8 +12,8 @@ FancySpec describe: Grouping with: {
   }
 
   it: "parses a grouping correctly" when: {
-    parse_grouping: { none } . is_a: NoneGrouping
-    parse_grouping: { shuffle } . is_a: ShuffleGrouping
+    parse_grouping: (NoneGrouping new) . is_a: NoneGrouping
+    parse_grouping: (ShuffleGrouping new) . is_a: ShuffleGrouping
     parse_grouping: { foo bar baz } . is_a: FieldsGrouping
     parse_grouping: { stream1: { foo bar baz } stream2: { bar baz bazinga } } . is_a: MultiGrouping
   }
@@ -26,9 +26,11 @@ FancySpec describe: Grouping with: {
       output: { a b c }
     }
 
-    MySpout[0] -- { none } --> (MyBolt[0])
-    MySpout[0] -- { shuffle } --> (MyBolt[1])
-    MySpout[1] -- { a b } --> (MyBolt[0])
+    {
+      MySpout[0] -- none --> (MyBolt[0])
+      MySpout[0] -- shuffle --> (MyBolt[1])
+      MySpout[1] -- { a b } --> (MyBolt[0])
+    } call_with_receiver: $ Storm Topology Definition new
 
     groupings = Grouping[MySpout[0]]
     groupings size is: 2

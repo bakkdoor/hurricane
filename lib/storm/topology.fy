@@ -1,5 +1,14 @@
 class Storm {
   class Topology {
+    class Definition {
+      def none {
+        NoneGrouping new
+      }
+      def shuffle {
+        ShuffleGrouping new
+      }
+    }
+
     class ClassMethods {
       def setup: @setup_block
 
@@ -12,14 +21,10 @@ class Storm {
         topology initialize
         if: @setup_block then: {
           let: '*storm_topology* be: topology in: {
-            topology do: @setup_block
+            Definition new do: @setup_block
           }
         }
         topology
-      }
-
-      def shuffle {
-        ShuffleGrouping new
       }
     }
 
