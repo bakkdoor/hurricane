@@ -18,8 +18,8 @@ class DuplicateComponents : Storm Topology {
     # assign IDs (calls to_s on ID) for multiple usage of the same component
     # in different parts of the topology:
 
-    Spout --> Double[1] --> [
-      Double[2] --> Double[3] --> Print["3double"],
+    Spout --> (Double[1]) --> [
+      (Double[2]) --> (Double[3]) --> (Print["3double"]),
       Print["1double"]
     ]
 
