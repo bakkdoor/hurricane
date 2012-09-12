@@ -4,4 +4,8 @@ class Block {
   def --> component {
     block_bolt --> component
   }
+
+  def -- grouping {
+    block_bolt -- grouping
+  }
 }
