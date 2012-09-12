@@ -72,6 +72,8 @@ class Storm {
         @default_instance
       }
 
+      lazy_slot: 'instances value: { <[]> }
+
       def * parallelism_hint {
         default_instance parallelism: parallelism_hint
       }
@@ -81,7 +83,8 @@ class Storm {
       }
 
       def [component_name] {
-        new: "#{name}:#{component_name}"
+        key = "#{name}:#{component_name}"
+        instances at: key else_put: { new: key }
       }
 
       def --> component {
