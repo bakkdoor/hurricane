@@ -8,7 +8,7 @@ MultiGrouping = Storm MultiGrouping
 
 FancySpec describe: Grouping with: {
   def parse_grouping: grouping {
-    Grouping parse: grouping sender: nil receiver: nil
+    Grouping parse: grouping
   }
 
   it: "parses a grouping correctly" when: {
