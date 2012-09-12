@@ -89,12 +89,16 @@ class Storm {
   }
 
   class BlockBolt : Bolt {
+    read_slot: 'block
     output: { value }
     anchor_tuples: true
+
     def initialize: @block
+
     def output: tuple {
       emit: tuple
     }
+
     def process: tuple {
       output: $ @block call: (tuple values)
       tuple ack!
