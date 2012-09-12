@@ -26,8 +26,20 @@ FancySpec describe: Grouping with: {
       output: { a b c }
     }
 
-    MySpout[0] -- { shuffle } --> MyBolt[0]
+    MySpout[0] -- { none } --> (MyBolt[0])
+    MySpout[0] -- { shuffle } --> (MyBolt[1])
+    MySpout[1] -- { a b } --> (MyBolt[0])
 
-    Storm Grouping[MySpout[0]] size is: 1
+    groupings = Grouping[MySpout[0]]
+    groupings size is: 2
+    groupings first is_a: NoneGrouping
+    groupings first receiver is: $ MyBolt[0]
+    groupings second is_a: ShuffleGrouping
+    groupings second receiver is: $ MyBolt[1]
+
+    groupings = Grouping[MySpout[1]]
+    groupings size is: 1
+    groupings first is_a: FieldsGrouping
+    groupings first receiver is: $ MyBolt[0]
   }
 }
