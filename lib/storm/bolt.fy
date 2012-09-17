@@ -1,8 +1,8 @@
 class Storm {
   class Bolt : Component {
     """
-    Bolts represent the actual work processes that receive tuples and
-    emit new @Storm Tuple@s on their output stream (possible consumed by other Bolts).
+    Bolts represent the actual work processes that receive and emit
+    @Storm::Tuple@s on their output stream (possible consumed by other Bolts).
     """
 
     class ClassMethods {
