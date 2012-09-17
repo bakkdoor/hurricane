@@ -89,6 +89,21 @@ class Storm {
   }
 
   class BlockBolt : Bolt {
+    """
+    A BlockBolt is a @Storm::Bolt@ that calls a Block with each incoming
+    @Storm::Tuple@ and outputs the return value to its output stream.
+    It auto-anchors outgoing @Storm::Tuple@s to the incoming ones and auto-acks
+    any incoming Tuples after calling the Block with them to generate
+    the output Tuple.
+
+    Example:
+          SumFields = BlockBolt new: @{ sum }
+          # or use fields explicitly:
+          SumFields = BlockBolt new: |f1 f2 f3| {
+            f1 + f2 + f3
+          }
+    """
+
     read_slot: 'block
     output: { value }
     anchor_tuples: true
