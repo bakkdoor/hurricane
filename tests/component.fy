@@ -10,10 +10,13 @@ FancySpec describe: Storm Component with: {
 
   it: "has the correct default component name" with: 'component_name when: {
     MyBolt new component_name is: "MyBolt"
+    MySpout new component_name is: "MySpout"
+  }
+
+  it: "has the correct component name when specified" with: '[] when: {
     MyBolt["foo"] component_name is: "MyBolt:foo"
     MyBolt[123] component_name is: "MyBolt:123"
-
-    MySpout new component_name is: "MySpout"
+    MySpout["foo"] component_name is: "MySpout:foo"
     MySpout[123] component_name is: "MySpout:123"
   }
 
