@@ -76,7 +76,7 @@ FancySpec describe: Storm BlockBolt with: {
     add2 run
 
     @out sent count: |m| {
-      m includes?: $ tup1['tuple] first + 2 to_s
+      m includes?: "\"tuple\":[12]"
     } . is: 1
 
     # @out sent count: |m| {
