@@ -2,7 +2,7 @@ require: "mocks"
 
 class TestBolt : Storm Bolt {
   output: { comma_seperated }
-  ack: true
+  always_ack!
   def process {
     output: $ @tuple join: ", "
   }

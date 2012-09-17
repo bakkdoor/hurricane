@@ -1,7 +1,7 @@
 class Double : Storm Bolt {
   input:  { value }
   output: { double_value }
-  ack_on_success: true
+  ack_on_success!
 
   def process {
     output: (2 * value)

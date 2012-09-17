@@ -1,7 +1,7 @@
 class Lalala : Storm Bolt {
   input:  { name }
   output: { lalala_name }
-  ack: true # always ack
+  always_ack!
 
   def process {
     output: "#{name}lalala"

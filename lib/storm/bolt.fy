@@ -6,7 +6,23 @@ class Storm {
     """
 
     class ClassMethods {
+      """
+      @Storm::Bolt@ class methods.
+      """
+
       def input: input_fields {
+        """
+        @input_fields @Array@ or @Block@ of field names.
+
+        Defines getter methods for the fields with the names given.
+        Assigns incoming tuple field names based on order given in @input_fields.
+
+        Example:
+              input: { name age city }
+              # or:
+              input: ('name, 'age, 'city)
+        """
+
         @input_fields = input_fields to_a
         @input_fields each_with_index: |f i| {
           class_eval: """
@@ -15,27 +31,52 @@ class Storm {
         }
       }
 
-      def ack_on_success: @ack_on_success
+      def ack_on_success! {
+        """
+        Sets this @Storm::Bolt@ to auto ack incoming tuples after successfully
+        having processed it.
+        """
+
+        @ack_on_success = true
+      }
+
       def ack_on_success? {
+        """
+        @return @true if this @Storm::Bolt@ auto acks successfully processed incoming tuples.
+        """
+
         @ack_on_success true?
       }
 
-      def ack: @always_ack
+      def always_ack! {
+        """
+        Sets this @Storm::Bolt@ to always ack incoming tuples, even if
+        processing failed.
+        """
+
+        @always_ack = true
+      }
+
       def always_ack? {
+        """
+        @return @true if this @Storm::Bolt@ always acks incoming tuples, even if processing failed.
+        """
+
         @always_ack true?
       }
 
-      def anchor_tuples: @anchor_tuples {
-        if: anchor_tuples? then: {
-          @output_streams each_key: |name| {
-            class_eval: """
-            def #{name}: tuple_out {
-              @output_streams[#{name inspect}] <- (tuple_out anchor: @tuple)
-            }
-            """
+      def anchor_tuples! {
+        @anchor_tuples = true
+
+        @output_streams each_key: |name| {
+          class_eval: """
+          def #{name}: tuple_out {
+            @output_streams[#{name inspect}] <- (tuple_out anchor: @tuple)
           }
+          """
         }
       }
+
       def anchor_tuples? {
         @anchor_tuples true?
       }
@@ -106,7 +147,7 @@ class Storm {
 
     read_slot: 'block
     output: { value }
-    anchor_tuples: true
+    anchor_tuples!
 
     def initialize: @block
 
