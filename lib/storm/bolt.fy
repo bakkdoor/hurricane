@@ -18,9 +18,11 @@ class Storm {
         Assigns incoming tuple field names based on order given in @input_fields.
 
         Example:
-              input: { name age city }
-              # or:
-              input: ('name, 'age, 'city)
+              class MyBolt : Storm Bolt {
+                input: { name age city }
+                # or:
+                input: ('name, 'age, 'city)
+              }
         """
 
         @input_fields = input_fields to_a
