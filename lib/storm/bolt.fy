@@ -12,7 +12,7 @@ class Storm {
 
       def input: input_fields {
         """
-        @input_fields @Array@ or @Block@ of field names.
+        @input_fields @Array@ or @Fancy::Enumerable@ of field names.
 
         Defines getter methods for the fields with the names given.
         Assigns incoming tuple field names based on order given in @input_fields.
