@@ -6,7 +6,7 @@ class PeopleAndCities : Storm Topology {
   setup: {
     MultipleStreamSpout -- [
       { city_stream: { name } } --> ReverseCityBolt,
-      { person_stream: {} }     --> ReversePersonBolt
+      { person_stream: none }   --> ReversePersonBolt
     ]
 
     MultipleStreamSpout * 10
