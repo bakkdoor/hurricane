@@ -7,7 +7,7 @@ class GetTweeters : Storm Bolt {
 
   input:  { id url }
   output: { id tweeter }
-  ack_on_success: true
+  ack_on_success!
 
   def process {
     tweeters =

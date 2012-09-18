@@ -26,8 +26,8 @@ conf = Storm Config new: {
 if: (ARGV size == 0) then: {
   conf max_task_parallelism: 3
   drpc = Storm LocalDRPC new
-  reach drpc: drpc
-  Storm local_cluster submit_topology: reach with_config: conf
+  Reach drpc: drpc
+  Storm local_cluster submit_topology: Reach with_config: conf
 
   ["foo.com/blog/1", "engineering.twitter.com/blog/5", "notaurl.com"] each: |url| {
     "Reach of: #{url}:" print
@@ -35,6 +35,5 @@ if: (ARGV size == 0) then: {
   }
 } else: {
   conf num_workers: 6
-  reach name: $ ARGV[0]
-  Storm remote_cluster submit_topology: reach with_config: conf
+  Storm remote_cluster submit_topology: Reach with_config: conf
 }

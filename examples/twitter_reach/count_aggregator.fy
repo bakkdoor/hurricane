@@ -1,9 +1,8 @@
 class CountAggregator : Storm Bolt {
   input:  { id partial }
   output: { id reach }
-  slots: { counts: <[]> }
-  ack_on_sucess: true
-
+  slots:  { counts: { <[]> } }
+  ack_on_success!
 
   def reach: id {
     @counts at: id else_put: { 0 }

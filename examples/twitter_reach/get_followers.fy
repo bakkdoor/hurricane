@@ -11,7 +11,7 @@ class GetFollowers : Storm Bolt {
 
   input:  { id tweeter }
   output: { id follower }
-  ack_on_success: true
+  ack_on_success!
 
   def process {
     if: (FOLLOWERS_DB[tweeter]) then: @{
