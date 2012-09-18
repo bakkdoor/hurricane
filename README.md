@@ -3,7 +3,7 @@
 
 Hurricane is a Fancy DSL and library for writing Storm Topologies (including bolts, spouts and topology definitions) completely in Fancy.
 
-It even has support for using standard Fancy Blocks (closures / anonymous functions) as bolts our spouts.
+It even has support for using standard Fancy Blocks (closures / anonymous functions) as bolts or spouts.
 
 Here's the DoubleAndTripleBolt from [Storm's wiki](https://github.com/nathanmarz/storm/wiki/Tutorial) implemented with Hurricane:
 
