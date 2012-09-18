@@ -86,6 +86,11 @@ class Storm {
       options = options to_hash
       stream = options['stream]
       anchors = (options['anchors] || options['anchor]) to_a
+
+      match tuple {
+        case Storm Tuple -> anchors = anchors + (tuple anchors)
+      }
+
       direct = options['direkt_task]
       m = <['command => 'emit, 'anchors => anchors map: @{ id }, 'tuple => tuple to_a]>
       { m['stream]: stream } if: stream

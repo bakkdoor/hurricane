@@ -68,18 +68,26 @@ class Storm {
       }
 
       def anchor_tuples! {
+        """
+        Sets ths @Storm::Bolt@ to automatically anchor an outgoing tuple to the last incoming one.
+        """
+
         @anchor_tuples = true
 
         @output_streams each_key: |name| {
           class_eval: """
           def #{name}: tuple_out {
-            @output_streams[#{name inspect}] <- (tuple_out anchor: @tuple)
+            emit: tuple_out with: <['stream => #{name inspect}, 'anchor => @tuple]>
           }
           """
         }
       }
 
       def anchor_tuples? {
+        """
+        @return @true if this @Storm::Bolt@ automatically anchors outgoing tuples to incoming ones.
+        """
+
         @anchor_tuples true?
       }
     }

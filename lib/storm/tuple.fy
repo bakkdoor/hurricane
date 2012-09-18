@@ -10,6 +10,7 @@ class Storm {
     include: Protocol
 
     read_write_slots: ('id, 'component, 'stream, 'task, 'values)
+    lazy_slot: 'anchors value: { Set new }
 
     def initialize: @id component: @component stream: @stream task: @task values: @values
 
@@ -32,6 +33,11 @@ class Storm {
     def ack! {
       { ack: self } unless: @acked?
       @acked? = true
+    }
+
+    def anchor: tuple {
+      anchors << tuple
+      self
     }
   }
 }
