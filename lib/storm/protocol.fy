@@ -12,7 +12,8 @@ class Storm {
     Output = STDOUT
 
     metaclass read_write_slots: ('pending_taskids, 'pending_commands)
-    self pending_taskids: []
+
+    self pending_taskids:  []
     self pending_commands: []
 
     def read_string_message {
@@ -84,31 +85,42 @@ class Storm {
 
     def emit_bolt: tuple with: options (<[]>) {
       options = options to_hash
-      stream = options['stream]
+      stream  = options['stream]
+      direct  = options['direkt_task]
       anchors = (options['anchors] || options['anchor]) to_a
 
       match tuple {
         case Storm Tuple -> anchors = anchors + (tuple anchors)
       }
 
-      direct = options['direkt_task]
-      m = <['command => 'emit, 'anchors => anchors map: @{ id }, 'tuple => tuple to_a]>
+      m = <[
+        'command => 'emit,
+        'anchors => anchors map: @{ id },
+        'tuple => tuple to_a
+      ]>
+
       { m['stream]: stream } if: stream
       { m['task]: direct } if: direct
+
       send: m
+
       { read_task_ids } unless: direct
     }
 
     def emit_spout: tuple with: options (<[]>) {
       options = options to_hash
-      stream = options['stream]
-      id = options['id]
-      direct = options['direct_task]
+      stream  = options['stream]
+      id      = options['id]
+      direct  = options['direct_task]
+
       m = <['command => 'emit, 'tuple => tuple]>
+
       { m['id]: id } if: id
       { m['stream]: stream } if: stream
       { m['task]: direct } if: direct
+
       send: m
+
       { read_task_ids } unless: direct
     }
 
