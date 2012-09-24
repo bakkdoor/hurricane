@@ -35,8 +35,9 @@ class Storm {
     }
 
     extend: ClassMethods
-    read_write_slots: ('sender, 'receiver)
-    def initialize: @sender to: @receiver
+    read_write_slots: ('sender, 'receiver, 'stream)
+
+    def initialize: @sender to: @receiver stream: @stream ('output);
 
     def --> component {
       receiver: component
@@ -49,7 +50,7 @@ class Storm {
   class ShuffleGrouping : Grouping
 
   class FieldsGrouping : Grouping {
-    read_write_slots: ('fields, 'stream)
+    read_write_slot: 'fields
     def initialize: @sender to: @receiver fields: @fields stream: @stream ('output);
   }
 
