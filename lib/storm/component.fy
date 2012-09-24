@@ -44,9 +44,10 @@ class Storm {
               }
         """
 
-        @output_streams = output_streams to_hash map: |name stream_info| {
-          (name, stream: (stream_info to_a) name: name)
-        } to_hash
+        @output_streams = <[]>
+        output_streams to_hash each: |name stream_info| {
+          @output_streams[name]: $ stream: (stream_info to_a) name: name
+        }
 
         define_output_methods
       }
